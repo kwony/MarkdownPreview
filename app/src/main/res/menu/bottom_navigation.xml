@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_markdown"
+        android:enabled="true"
+        android:icon="@drawable/ic_code_black_24dp"
+        android:title="Markdown"/>
+
+    <item
+        android:id="@+id/action_recent"
+        android:enabled="true"
+        android:icon="@drawable/ic_star_black_24dp"
+        android:title="Recent"/>
+
+    <item
+        android:id="@+id/action_theme"
+        android:enabled="true"
+        android:icon="@drawable/ic_blur_on_black_24dp"
+        android:title="Theme"/>
+
+</menu>
