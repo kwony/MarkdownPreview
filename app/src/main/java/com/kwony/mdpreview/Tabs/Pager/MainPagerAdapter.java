@@ -3,12 +3,13 @@ package com.kwony.mdpreview.Tabs.Pager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.kwony.mdpreview.Tabs.MarkdownTab;
 import com.kwony.mdpreview.Tabs.RecentTab;
 import com.kwony.mdpreview.Tabs.ThemeTab;
 
-public class MainPagerAdapter extends FragmentPagerAdapter {
+public class MainPagerAdapter extends FragmentStatePagerAdapter {
     int nNumOfTabs = 3;
 
     public MainPagerAdapter(FragmentManager fm) {

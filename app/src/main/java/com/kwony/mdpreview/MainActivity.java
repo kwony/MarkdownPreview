@@ -8,11 +8,12 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.kwony.mdpreview.Tabs.Pager.MainPagerAdapter;
+import com.kwony.mdpreview.Tabs.Pager.MainViewPager;
 
 public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigationView;
-    ViewPager viewPager;
+    MainViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
