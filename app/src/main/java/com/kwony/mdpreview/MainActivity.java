@@ -1,6 +1,7 @@
 package com.kwony.mdpreview;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
@@ -28,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton ibSave;
 
     private final static int ASK_OPEN_PERMISSION = 0;
+
+    private final static int PICK_FILE_RESULT_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +111,40 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            openFileContent();
+
             break;
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+        case PICK_FILE_RESULT_CODE:
+            if (resultCode == RESULT_OK) {
+                /*
+                 * TODO List.
+                 *
+                 * 1. Check current file is under modified
+                 *  1.1 Ask user save it or not.
+                 * 2. Read designated file and get buffers
+                 * 3. Create new file 'currentFile.md' and use it as mirror.
+                 * 4. Run a thread to check whether two files are different
+                 * */
+
+            }
+        }
+    }
+
+    private void openFileContent() {
+        Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        fileIntent.setType("*/*");
+        try {
+            startActivityForResult(fileIntent, PICK_FILE_RESULT_CODE);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
