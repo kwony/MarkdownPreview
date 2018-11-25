@@ -1,5 +1,6 @@
 package com.kwony.mdpreview.Utilities;
 
+import android.content.res.Resources;
 import android.os.Environment;
 
 import com.kwony.mdpreview.R;
@@ -79,5 +80,27 @@ public class FileManager {
         }
 
         return outStringBuf;
+    }
+
+    public static final void writeFileValue(String filePath, String fileName, String value) {
+        File file = new File(filePath + File.separator + fileName);
+
+        if (file.exists()) {
+            try {
+                final String welcomeString = new String(value);
+                FileOutputStream fOut = new FileOutputStream(file);
+                OutputStreamWriter osw = new OutputStreamWriter(fOut);
+
+                try {
+                    osw.write(welcomeString);
+                    osw.flush();
+                    osw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
