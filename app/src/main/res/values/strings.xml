@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">mdpreview</string>
 
-    <string name="toast_unable_contiue_without_perm"> Unable to continue without Permission </string>
+    <string name="toast_unable_contiue_without_perm"> Unable to use app without Permission </string>
 </resources>
