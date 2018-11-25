@@ -4,9 +4,13 @@ import android.os.Environment;
 
 import com.kwony.mdpreview.R;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class FileManager {
@@ -41,5 +45,39 @@ public class FileManager {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static final StringBuffer readFileValue(String filePath, String fileName) {
+        StringBuffer outStringBuf = new StringBuffer();
+        String inputLine = null;
+
+        File file = new File(filePath + File.separator + fileName);
+
+        if (!file.exists()) {
+            return null;
+        }
+
+        try {
+            FileInputStream fIn = new FileInputStream(file);
+            InputStreamReader isr = new InputStreamReader(fIn);
+            BufferedReader inBuff = new BufferedReader(isr);
+
+            while (true) {
+                try {
+                    inputLine = inBuff.readLine();
+                } catch(IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (inputLine == null)
+                    break;
+
+                outStringBuf.append(inputLine);
+            }
+        } catch(FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return outStringBuf;
     }
 }
