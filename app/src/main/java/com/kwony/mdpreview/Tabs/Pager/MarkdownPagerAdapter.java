@@ -7,13 +7,14 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.kwony.mdpreview.Tabs.MarkdownTabs.CodeTab;
+import com.kwony.mdpreview.Tabs.MarkdownTabs.IMarkdownTab;
 import com.kwony.mdpreview.Tabs.MarkdownTabs.PreviewTab;
 
 public class MarkdownPagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs = 2;
     CharSequence mTitles[];
 
-    SparseArray<Fragment> registeredFragments = new SparseArray<>();
+    SparseArray<IMarkdownTab> registeredTabs = new SparseArray<>();
 
     public MarkdownPagerAdapter(FragmentManager fm, CharSequence titles[],
                                 int numOfTabs) {
@@ -26,6 +27,7 @@ public class MarkdownPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment tab = null;
+
         switch (position) {
         case 0:
             tab = new PreviewTab();
@@ -51,17 +53,18 @@ public class MarkdownPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         Fragment fragment = (Fragment) super.instantiateItem(container, position);
-        registeredFragments.put(position, fragment);
+        registeredTabs.put(position, (IMarkdownTab)fragment);
+
         return fragment;
     }
 
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
-        registeredFragments.remove(position);
+        registeredTabs.remove(position);
         super.destroyItem(container, position, object);
     }
 
-    public Fragment getRegisteredFragment(int position) {
-        return registeredFragments.get(position);
+    public IMarkdownTab getRegisteredTab(int position) {
+        return registeredTabs.get(position);
     }
 }
