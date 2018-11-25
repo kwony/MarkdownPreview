@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -19,8 +20,13 @@ import android.widget.Toast;
 import com.kwony.mdpreview.Tabs.Pager.MainPagerAdapter;
 import com.kwony.mdpreview.Tabs.Pager.MainViewPager;
 
-public class MainActivity extends AppCompatActivity {
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
+public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
     MainViewPager viewPager;
 
@@ -66,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
+
+        createWorkspaceFile();
     }
 
     private void actionbarSetup() {
@@ -146,5 +154,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void createWorkspaceFile() {
+        boolean folderCreated = true;
 
+        File folder = new File(Environment.getExternalStorageDirectory()
+                + File.separator + getString(R.string.app_name));
+
+        File file = new File(Environment.getExternalStorageDirectory()
+                + File.separator + "/" + getString(R.string.app_name) + "/"
+                + File.separator + getString(R.string.mirror_file_md));
+
+        if (!folder.exists()) {
+            folderCreated = folder.mkdir();
+        }
+
+        if (folderCreated && !file.exists()) {
+            try {
+                file.createNewFile();
+
+                final String welcomeString = new String("## Hello World");
+                FileOutputStream fOut = new FileOutputStream(file);
+                OutputStreamWriter osw = new OutputStreamWriter(fOut);
+
+                osw.write(welcomeString);
+                osw.flush();
+                osw.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
