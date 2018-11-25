@@ -16,7 +16,7 @@ import com.kwony.mdpreview.Utilities.FileManager;
 
 import java.io.File;
 
-public class CodeTab extends Fragment {
+public class CodeTab extends Fragment implements IMarkdownTab {
     private Button btnSave;
     private EditText etCode;
 
@@ -37,13 +37,21 @@ public class CodeTab extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileManager.writeFileValue(Environment.getExternalStorageDirectory()
-                        + File.separator + getString(R.string.app_name),
-                        getString(R.string.mirror_file_md),
-                        etCode.getText().toString());
+                saveFile();
             }
         });
 
         return v;
+    }
+
+    public void cbPageSelected() {
+        saveFile();
+    }
+
+    private void saveFile() {
+        FileManager.writeFileValue(Environment.getExternalStorageDirectory()
+                        + File.separator + getString(R.string.app_name),
+                getString(R.string.mirror_file_md),
+                etCode.getText().toString());
     }
 }
