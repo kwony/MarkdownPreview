@@ -1,0 +1,45 @@
+package com.kwony.mdpreview.Utilities;
+
+import android.os.Environment;
+
+import com.kwony.mdpreview.R;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
+public class FileManager {
+
+    public static final boolean createFolder(String dst, String folderName) {
+        boolean folderCreated = true;
+        File folder = new File(dst + File.separator + folderName);
+
+        if (!folder.exists()) {
+            folderCreated = folder.mkdir();
+        }
+
+        return folderCreated;
+    }
+
+    public static final void createFile(String dst, String fileName, String initialValue) {
+        File file = new File(dst + File.separator + fileName);
+
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+
+                final String welcomeString = new String(initialValue);
+                FileOutputStream fOut = new FileOutputStream(file);
+                OutputStreamWriter osw = new OutputStreamWriter(fOut);
+
+                osw.write(welcomeString);
+                osw.flush();
+                osw.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}

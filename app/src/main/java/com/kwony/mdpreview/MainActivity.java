@@ -19,12 +19,9 @@ import android.widget.Toast;
 
 import com.kwony.mdpreview.Tabs.Pager.MainPagerAdapter;
 import com.kwony.mdpreview.Tabs.Pager.MainViewPager;
+import com.kwony.mdpreview.Utilities.FileManager;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
@@ -155,34 +152,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createWorkspaceFile() {
-        boolean folderCreated = true;
+        boolean folderCreated;
 
-        File folder = new File(Environment.getExternalStorageDirectory()
-                + File.separator + getString(R.string.app_name));
+        folderCreated = FileManager.createFolder(
+                Environment.getExternalStorageDirectory() + File.separator,
+                getString(R.string.app_name));
 
-        File file = new File(Environment.getExternalStorageDirectory()
-                + File.separator + "/" + getString(R.string.app_name) + "/"
-                + File.separator + getString(R.string.mirror_file_md));
-
-        if (!folder.exists()) {
-            folderCreated = folder.mkdir();
-        }
-
-        if (folderCreated && !file.exists()) {
-            try {
-                file.createNewFile();
-
-                final String welcomeString = new String("## Hello World");
-                FileOutputStream fOut = new FileOutputStream(file);
-                OutputStreamWriter osw = new OutputStreamWriter(fOut);
-
-                osw.write(welcomeString);
-                osw.flush();
-                osw.close();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (folderCreated) {
+            FileManager.createFile(
+                    Environment.getExternalStorageDirectory() + File.separator + "/" + getString(R.string.app_name) + "/"
+                    , getString(R.string.mirror_file_md), getString(R.string.initial_mirror_value));
         }
     }
 }

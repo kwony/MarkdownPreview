@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">mdpreview</string>
 
+    <string name="initial_mirror_value">## Hello World</string>
     <string name="mirror_file_md">686d8501d75b271337e18677009c68fe.md</string>
     <string name="toast_unable_contiue_without_perm"> Unable to use app without Permission </string>
 </resources>
