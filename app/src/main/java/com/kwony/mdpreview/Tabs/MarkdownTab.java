@@ -40,7 +40,9 @@ public class MarkdownTab extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 IMarkdownTab imt = adapter.getRegisteredTab(position);
-                imt.cbPageSelected();
+
+                if (imt != null)
+                    imt.cbPageSelected();
             }
 
             @Override

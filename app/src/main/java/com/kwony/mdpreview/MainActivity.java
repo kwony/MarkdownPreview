@@ -114,9 +114,13 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResult == PackageManager.PERMISSION_DENIED) {
                     Toast.makeText(getApplicationContext(), R.string.toast_unable_contiue_without_perm,
                             Toast.LENGTH_LONG).show();
+
+                    finish();
                     return;
                 }
             }
+
+            createWorkspaceFile();
 
             break;
         }

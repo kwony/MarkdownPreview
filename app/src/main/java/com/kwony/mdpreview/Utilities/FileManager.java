@@ -80,7 +80,7 @@ public class FileManager {
             e.printStackTrace();
         }
 
-        return new StringBuffer(outStringBuf.substring(0, outStringBuf.length() - 1));
+        return outStringBuf;
     }
 
     public static final void writeFileValue(String filePath, String fileName, String value) {
