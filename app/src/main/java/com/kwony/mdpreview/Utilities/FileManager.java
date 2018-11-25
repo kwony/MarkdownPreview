@@ -74,12 +74,13 @@ public class FileManager {
                     break;
 
                 outStringBuf.append(inputLine);
+                outStringBuf.append("\n");
             }
         } catch(FileNotFoundException e) {
             e.printStackTrace();
         }
 
-        return outStringBuf;
+        return new StringBuffer(outStringBuf.substring(0, outStringBuf.length() - 1));
     }
 
     public static final void writeFileValue(String filePath, String fileName, String value) {
