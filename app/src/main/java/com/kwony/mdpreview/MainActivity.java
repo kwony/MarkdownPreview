@@ -39,6 +39,12 @@ public class MainActivity extends AppCompatActivity {
 
         actionbarSetup();
 
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[] {
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                ASK_OPEN_PERMISSION);
+
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -82,11 +88,7 @@ public class MainActivity extends AppCompatActivity {
         ibOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[] {
-                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        ASK_OPEN_PERMISSION);
+                openFileContent();
             }
         });
 
@@ -110,8 +112,6 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
             }
-
-            openFileContent();
 
             break;
         }
