@@ -45,6 +45,10 @@ public class CodeTab extends Fragment implements IMarkdownTab {
     }
 
     public void cbPageSelected() {
+
+    }
+
+    public void cbPageUnSelected() {
         saveFile();
     }
 

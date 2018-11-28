@@ -34,15 +34,23 @@ public class MarkdownTab extends Fragment {
         pager.setAdapter(adapter);
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            private int prePosition = -1;
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
             @Override
-            public void onPageSelected(int position) {
-                IMarkdownTab imt = adapter.getRegisteredTab(position);
+            public void onPageSelected(int curPosition) {
+                IMarkdownTab curImt = adapter.getRegisteredTab(curPosition);
+                IMarkdownTab preImt = adapter.getRegisteredTab(prePosition);
 
-                if (imt != null)
-                    imt.cbPageSelected();
+                if (curPosition == prePosition || curImt == null)
+                    return;
+
+                if (preImt!=null)
+                    preImt.cbPageUnSelected();
+
+                curImt.cbPageSelected();
+                prePosition = curPosition;
             }
 
             @Override
