@@ -28,4 +28,16 @@ public class FileInfo {
     public String getFileDate() {
         return mFileDate;
     }
+
+    public void setFileName(String fileName) {
+        mFileName = fileName;
+    }
+
+    public void setFilePath(String filePath) {
+        mFilePath = filePath;
+    }
+
+    public void setFileDate(String fileDate) {
+        mFileDate = fileDate;
+    }
 }
