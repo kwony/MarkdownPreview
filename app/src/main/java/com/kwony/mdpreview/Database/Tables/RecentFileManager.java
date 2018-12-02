@@ -70,10 +70,9 @@ public class RecentFileManager implements TableManager {
      * registered in RecentFileTable then table deletes existing row and recreate it
      * at the bottom of table.
      * */
-    public FileInfo insertFileInfo(FileInfo fileInfo) {
+    public long insertFileInfo(FileInfo fileInfo) {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         long newFileId = -1;
-        FileInfo newFileInfo;
 
         db.beginTransaction();
 
@@ -85,10 +84,7 @@ public class RecentFileManager implements TableManager {
 
         DatabaseManager.getInstance().closeDatabase();
 
-        newFileInfo = new FileInfo(newFileId, fileInfo.getFileName(),
-                fileInfo.getFilePath(), fileInfo.getFileDate());
-
-        return newFileInfo;
+        return newFileId;
     }
 
     private long addFileInfo(SQLiteDatabase db, FileInfo fileInfo) {
