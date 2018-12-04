@@ -17,6 +17,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.kwony.mdpreview.Database.DatabaseHelper;
+import com.kwony.mdpreview.Database.DatabaseManager;
+import com.kwony.mdpreview.Database.SharedPreferenceManager;
+import com.kwony.mdpreview.Database.Tables.RecentFileManager;
 import com.kwony.mdpreview.Tabs.Pager.MainPagerAdapter;
 import com.kwony.mdpreview.Tabs.Pager.MainViewPager;
 import com.kwony.mdpreview.Utilities.FileManager;
@@ -71,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
 
         createWorkspaceFile();
+
+        initializeDatabase();
     }
 
     private void actionbarSetup() {
@@ -167,5 +173,13 @@ public class MainActivity extends AppCompatActivity {
                     Environment.getExternalStorageDirectory() + File.separator + "/" + getString(R.string.app_name) + "/"
                     , getString(R.string.mirror_file_md), getString(R.string.initial_mirror_value));
         }
+    }
+
+    private void initializeDatabase() {
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        databaseHelper.registerTableManager(new RecentFileManager());
+        DatabaseManager.initInstance(databaseHelper);
+
+        SharedPreferenceManager.initInstance(getApplicationContext());
     }
 }
