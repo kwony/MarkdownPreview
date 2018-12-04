@@ -3,6 +3,7 @@ package com.kwony.mdpreview.Utilities;
 import android.content.res.Resources;
 import android.os.Environment;
 
+import com.kwony.mdpreview.FileInfo;
 import com.kwony.mdpreview.R;
 
 import java.io.BufferedReader;
@@ -11,7 +12,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 public class FileManager {
@@ -101,6 +104,25 @@ public class FileManager {
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    public static void copyFile(FileInfo srcInfo, FileInfo dstInfo) throws IOException {
+        File srcFile = new File(srcInfo.getFilePath() + File.separator + srcInfo.getFileName());
+        File dstFile = new File(dstInfo.getFilePath() + File.separator + dstInfo.getFileName());
+
+        if (!dstFile.exists())
+            dstFile.createNewFile();
+
+        try (InputStream in = new FileInputStream(srcFile)) {
+            try (OutputStream out = new FileOutputStream(dstFile)) {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
             }
         }
     }
