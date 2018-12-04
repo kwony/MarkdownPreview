@@ -8,8 +8,6 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -17,6 +15,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.kwony.mdpreview.Builders.CreateFileBuilder;
 import com.kwony.mdpreview.Database.DatabaseHelper;
 import com.kwony.mdpreview.Database.DatabaseManager;
 import com.kwony.mdpreview.Database.SharedPreferenceManager;
@@ -26,6 +25,7 @@ import com.kwony.mdpreview.Tabs.Pager.MainViewPager;
 import com.kwony.mdpreview.Utilities.FileManager;
 
 import java.io.File;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigationView;
@@ -106,7 +106,30 @@ public class MainActivity extends AppCompatActivity {
         ibSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
+                CreateFileBuilder saveFileBuilder = new CreateFileBuilder(MainActivity.this);
 
+                String mirrorFilePath =
+                        Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
+                String mirrorFileName = getString(R.string.mirror_file_md);
+
+                FileInfo mirrorFile = new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
+
+                if (sharedPrefMgr.getCurrentFileId() == -1) {
+                    /* Case name is required */
+                    saveFileBuilder.createFileDialog(mirrorFile);
+                }
+                else {
+                    /* Case source file exist */
+                    RecentFileManager rctFileManager = new RecentFileManager();
+                    FileInfo srcFileInfo = rctFileManager.getFileInfo(sharedPrefMgr.getCurrentFileId());
+
+                    try {
+                        FileManager.copyFile(mirrorFile, srcFileInfo);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }
