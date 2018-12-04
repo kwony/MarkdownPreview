@@ -38,6 +38,30 @@ public class RecentFileManager implements TableManager {
 
     }
 
+    public FileInfo getFileInfo(long fileId) {
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+        FileInfo retFile = new FileInfo(fileId, null, null, null);
+
+        Cursor cursor = db.query(FILE_TABLE_NAME, new String[] { KEY_FILE_ID, KEY_FILE_NAME,
+        KEY_FILE_PATH, KEY_FILE_DATE }, KEY_FILE_ID + "=?",
+                new String[] { String.valueOf(fileId) }, null, null, null, null);
+
+        if (cursor == null || cursor.getCount() == 0) {
+            DatabaseManager.getInstance().closeDatabase();
+            return retFile;
+        }
+
+        if (cursor.moveToFirst()) {
+            retFile.setFileName(cursor.getString(FILE_NAME_IDX));
+            retFile.setFilePath(cursor.getString(FILE_PATH_IDX));
+            retFile.setFileDate(cursor.getString(FILE_DATE_IDX));
+        }
+
+        DatabaseManager.getInstance().closeDatabase();
+
+        return retFile;
+    }
+
     public List<FileInfo> getAllFileInfo() {
         SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
         List<FileInfo> fileInfoList = new ArrayList<>();
