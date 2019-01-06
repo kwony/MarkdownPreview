@@ -6,11 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -20,20 +19,23 @@ import com.kwony.mdpreview.Database.DatabaseHelper;
 import com.kwony.mdpreview.Database.DatabaseManager;
 import com.kwony.mdpreview.Database.SharedPreferenceManager;
 import com.kwony.mdpreview.Database.Tables.RecentFileManager;
-import com.kwony.mdpreview.Tabs.Pager.MainPagerAdapter;
-import com.kwony.mdpreview.Tabs.Pager.MainViewPager;
+import com.kwony.mdpreview.Tabs.MarkdownTabs.IMarkdownTab;
+import com.kwony.mdpreview.Tabs.Pager.MarkdownPagerAdapter;
+import com.kwony.mdpreview.Tabs.SlidingTabLib.SlidingTabLayout;
 import com.kwony.mdpreview.Utilities.FileManager;
 
 import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    BottomNavigationView bottomNavigationView;
-    MainViewPager viewPager;
+    private ViewPager viewPager;
+    private MarkdownPagerAdapter adapter;
+    private SlidingTabLayout tabs;
 
     private ImageButton ibShare;
     private ImageButton ibOpen;
     private ImageButton ibSave;
+    CharSequence Titles[] = { "Preview", "Code" };
 
     private final static int ASK_OPEN_PERMISSION = 0;
 
@@ -52,27 +54,42 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 ASK_OPEN_PERMISSION);
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        adapter = new MarkdownPagerAdapter(getSupportFragmentManager(), Titles, Titles.length);
+
+        viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(adapter);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            private int prePosition = -1;
+
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                case R.id.action_markdown:
-                    viewPager.setCurrentItem(0);
-                    break;
-                case R.id.action_recent:
-                    viewPager.setCurrentItem(1);
-                    break;
-                case R.id.action_theme:
-                    viewPager.setCurrentItem(2);
-                    break;
-                }
-                return true;
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int curPosition) {
+                IMarkdownTab curImt = adapter.getRegisteredTab(curPosition);
+                IMarkdownTab preImt = adapter.getRegisteredTab(prePosition);
+
+                if (curPosition == prePosition || curImt == null)
+                    return;
+
+                if (preImt!=null)
+                    preImt.cbPageUnSelected();
+
+                curImt.cbPageSelected();
+                prePosition = curPosition;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
 
-        viewPager = findViewById(R.id.viewpager);
-        viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
+        tabs = findViewById(R.id.sliding_tab);
+        tabs.setDistributeEvenly(true);
+        tabs.setViewPager(viewPager);
 
         createWorkspaceFile();
 
