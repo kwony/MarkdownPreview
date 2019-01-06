@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.kwony.mdpreview.Builders.CreateFileBuilder;
@@ -162,10 +163,10 @@ public class MainActivity extends AppCompatActivity {
         case ASK_OPEN_PERMISSION:
             for (int grantResult : grantResults) {
                 if (grantResult == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(getApplicationContext(), R.string.toast_unable_contiue_without_perm,
-                            Toast.LENGTH_LONG).show();
 
-                    finish();
+                    LinearLayout llDenied = findViewById(R.id.llDenied);
+                    llDenied.setVisibility(View.VISIBLE);
+
                     return;
                 }
             }
