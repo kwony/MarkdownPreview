@@ -38,15 +38,17 @@ public class CodeTab extends Fragment implements IMarkdownTab {
     }
 
     public void cbPageSelected() {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+//        TODO: find flag which has soft keyboard is enabled
+//        InputMethodManager inputMethodManager =
+//                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
     }
 
     public void cbPageUnSelected() {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+//        TODO: find flag which has soft keyboard is enabled
+//        InputMethodManager inputMethodManager =
+//                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        inputMethodManager.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         saveFile();
     }
 
