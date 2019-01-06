@@ -4,12 +4,14 @@ import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton ibShare;
     private ImageButton ibOpen;
     private ImageButton ibSave;
+    private ImageButton ibAdd;
     CharSequence Titles[] = { "Preview", "Code" };
 
     private final static int ASK_OPEN_PERMISSION = 0;
@@ -46,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        actionbarSetup();
+        paletteSetup();
 
         ActivityCompat.requestPermissions(MainActivity.this,
                 new String[] {
@@ -96,16 +99,17 @@ public class MainActivity extends AppCompatActivity {
         initializeDatabase();
     }
 
-    private void actionbarSetup() {
-        View v;
+    private void paletteSetup() {
+        ibShare = findViewById(R.id.ib_share);
+        ibOpen = findViewById(R.id.ib_open);
+        ibSave = findViewById(R.id.ib_save);
+        ibAdd = findViewById(R.id.ib_note_add);
 
-        getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setCustomView(R.layout.action_bar_custom);
-        v = getSupportActionBar().getCustomView();
-
-        ibShare = v.findViewById(R.id.ib_share);
-        ibOpen = v.findViewById(R.id.ib_open);
-        ibSave = v.findViewById(R.id.ib_save);
+        /* Every image buttons has same animation effect on touch */
+        ibShare.setOnTouchListener(ibTouchListener);
+        ibSave.setOnTouchListener(ibTouchListener);
+        ibOpen.setOnTouchListener(ibTouchListener);
+        ibAdd.setOnTouchListener(ibTouchListener);
 
         ibShare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,4 +226,23 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferenceManager.initInstance(getApplicationContext());
     }
+
+    private View.OnTouchListener ibTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch(event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    v.getBackground().setColorFilter(0x93939393, PorterDuff.Mode.SRC_ATOP);
+                    v.invalidate();
+                    break;
+                }
+                case MotionEvent.ACTION_UP: {
+                    v.getBackground().clearColorFilter();
+                    v.invalidate();
+                    break;
+                }
+            }
+            return false;
+        }
+    };
 }
