@@ -7,104 +7,112 @@
     tools:context=".MainActivity">
 
     <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="0dp">
 
-        <RelativeLayout
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+            <com.kwony.mdpreview.Tabs.SlidingTabLib.SlidingTabLayout
+                android:id="@+id/sliding_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="8">
-
-            <LinearLayout
+            <android.support.v4.view.ViewPager
+                android:id="@+id/view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <com.kwony.mdpreview.Tabs.SlidingTabLib.SlidingTabLayout
-                    android:id="@+id/sliding_tab"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/view_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
-        </RelativeLayout>
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <!-- Bottom editor bar -->
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:background="@android:drawable/screen_background_light_transparent"
-                android:orientation="horizontal">
+                android:layout_weight="1">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                <ImageButton
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/ib_note_add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:padding="3dp"
+                    android:src="@drawable/round_note_add_black_24dp" />
+            </android.support.constraint.ConstraintLayout>
 
-                    <ImageButton
-                        android:id="@+id/ib_note_add"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:drawable/screen_background_light_transparent"
-                        android:padding="3dp"
-                        android:src="@drawable/round_note_add_black_24dp" />
-                </RelativeLayout>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                <ImageButton
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/ib_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:padding="3dp"
+                    android:src="@drawable/round_save_black_24dp" />
+            </android.support.constraint.ConstraintLayout>
 
-                    <ImageButton
-                        android:id="@+id/ib_save"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:drawable/screen_background_light_transparent"
-                        android:padding="3dp"
-                        android:src="@drawable/round_save_black_24dp" />
-                </RelativeLayout>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                <ImageButton
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/ib_open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:padding="3dp"
+                    android:src="@drawable/ic_folder_open_black_24dp" />
+            </android.support.constraint.ConstraintLayout>
 
-                    <ImageButton
-                        android:id="@+id/ib_open"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:drawable/screen_background_light_transparent"
-                        android:padding="3dp"
-                        android:src="@drawable/ic_folder_open_black_24dp" />
-                </RelativeLayout>
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
-
-                    <ImageButton
-                        android:id="@+id/ib_share"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@android:drawable/screen_background_light_transparent"
-                        android:padding="3dp"
-                        android:src="@drawable/ic_share_black_24dp" />
-                </RelativeLayout>
-            </LinearLayout>
-        </RelativeLayout>
+                <ImageButton
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:id="@+id/ib_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/screen_background_light_transparent"
+                    android:padding="3dp"
+                    android:src="@drawable/ic_share_black_24dp" />
+            </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
