@@ -1,5 +1,6 @@
 package com.kwony.mdpreview.Tabs.Pager;
 
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -13,6 +14,7 @@ import com.kwony.mdpreview.Tabs.MarkdownTabs.PreviewTab;
 public class MarkdownPagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs = 2;
     CharSequence mTitles[];
+    int mImageResources[];
 
     SparseArray<IMarkdownTab> registeredTabs = new SparseArray<>();
 
@@ -22,6 +24,15 @@ public class MarkdownPagerAdapter extends FragmentStatePagerAdapter {
 
         this.mTitles = titles;
         this.mNumOfTabs = numOfTabs;
+    }
+
+    public MarkdownPagerAdapter(FragmentManager fm, CharSequence titles[], int images[],
+                                int numOfTabs) {
+        super(fm);
+
+        this.mTitles = titles;
+        this.mNumOfTabs = numOfTabs;
+        this.mImageResources = images;
     }
 
     @Override
@@ -63,6 +74,8 @@ public class MarkdownPagerAdapter extends FragmentStatePagerAdapter {
         registeredTabs.remove(position);
         super.destroyItem(container, position, object);
     }
+
+    public int getPageImageResource(int position) { return mImageResources[position]; }
 
     public IMarkdownTab getRegisteredTab(int position) {
         return registeredTabs.get(position);

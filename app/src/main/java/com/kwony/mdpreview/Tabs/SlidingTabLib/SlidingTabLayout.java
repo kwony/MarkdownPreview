@@ -28,8 +28,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.kwony.mdpreview.R;
+import com.kwony.mdpreview.Tabs.Pager.MarkdownPagerAdapter;
 
 public class SlidingTabLayout extends HorizontalScrollView {
     /**
@@ -54,6 +58,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private int mTabViewLayoutId;
     private int mTabViewTextViewId;
     private boolean mDistributeEvenly;
+    private boolean mShowImage;
 
     private ViewPager mViewPager;
     private SparseArray<String> mContentDescriptions = new SparseArray<String>();
@@ -98,6 +103,10 @@ public class SlidingTabLayout extends HorizontalScrollView {
         mDistributeEvenly = distributeEvenly;
     }
 
+    public void setShowImage(boolean showImage) {
+        mShowImage = showImage;
+    }
+
     /**
      * Sets the colors to be used for indicating the selected tab. These colors are treated as a
      * circular array. Providing one color will mean that all tabs are indicated with the same color.
@@ -138,7 +147,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
         mViewPager = viewPager;
         if (viewPager != null) {
             viewPager.addOnPageChangeListener(new InternalViewPagerListener());
-            populateTabStrip();
+
+            if (!mShowImage)
+                populateTabStrip();
+            else
+                populateImageTabStrip();
         }
     }
 
@@ -165,6 +178,18 @@ public class SlidingTabLayout extends HorizontalScrollView {
         textView.setPadding(padding, padding, padding, padding);
 
         return textView;
+    }
+
+    protected ImageView createDefaultImageTabView(Context context) {
+        ImageView imageView = new ImageView(context);
+        imageView.setForegroundGravity(Gravity.CENTER);
+        imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
+        imageView.setPadding(padding, padding, padding, padding);
+
+        return imageView;
     }
 
     private void populateTabStrip() {
@@ -203,6 +228,29 @@ public class SlidingTabLayout extends HorizontalScrollView {
             if (desc != null) {
                 tabView.setContentDescription(desc);
             }
+
+            mTabStrip.addView(tabView);
+            if (i == mViewPager.getCurrentItem()) {
+                tabView.setSelected(true);
+            }
+        }
+    }
+
+    private void populateImageTabStrip() {
+        final MarkdownPagerAdapter adapter = (MarkdownPagerAdapter) mViewPager.getAdapter();
+        final View.OnClickListener tabClickListener = new TabClickListener();
+
+        for (int i = 0; i < adapter.getCount(); i++) {
+            View tabView = createDefaultImageTabView(getContext());
+            ImageView tabImageView = (ImageView) tabView;
+
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tabView.getLayoutParams();
+            lp.width = 0;
+            lp.weight = 1;
+            lp.height = 150;
+
+            tabImageView.setImageResource(adapter.getPageImageResource(i));
+            tabView.setOnClickListener(tabClickListener);
 
             mTabStrip.addView(tabView);
             if (i == mViewPager.getCurrentItem()) {

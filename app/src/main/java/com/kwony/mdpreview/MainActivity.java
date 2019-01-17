@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton ibSave;
     private ImageButton ibAdd;
     CharSequence Titles[] = { "Preview", "Code" };
+    private int Images[] = { R.drawable.ic_code_black_24dp, R.drawable.ic_mode_edit_black_24dp };
 
     private final static int ASK_OPEN_PERMISSION = 0;
 
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 ASK_OPEN_PERMISSION);
 
-        adapter = new MarkdownPagerAdapter(getSupportFragmentManager(), Titles, Titles.length);
+        adapter = new MarkdownPagerAdapter(getSupportFragmentManager(), Titles, Images, Titles.length);
 
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(adapter);
@@ -93,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
 
         tabs = findViewById(R.id.sliding_tab);
         tabs.setDistributeEvenly(true);
+        tabs.setShowImage(true);
+
+        // XXX: setViewPage should be called at last to apply settings.
         tabs.setViewPager(viewPager);
 
         createWorkspaceFile();
