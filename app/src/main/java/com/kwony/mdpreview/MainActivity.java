@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         tabs = findViewById(R.id.sliding_tab);
         tabs.setDistributeEvenly(true);
         tabs.setShowImage(true);
+        tabs.setSelectedIndicatorColors(getResources().getColor(R.color.slidingBar, null));
 
         // XXX: setViewPage should be called at last to apply settings.
         tabs.setViewPager(viewPager);
