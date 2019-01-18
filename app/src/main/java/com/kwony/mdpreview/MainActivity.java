@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton ibSave;
     private ImageButton ibAdd;
     CharSequence Titles[] = { "Preview", "Code" };
-    private int Images[] = { R.drawable.ic_code_black_24dp, R.drawable.ic_mode_edit_black_24dp };
+    private int selectedImgSrc[] = { R.drawable.ic_code_black_24dp, R.drawable.ic_mode_edit_black_24dp };
+    private int unselectedImgSrc [] = { R.drawable.ic_code_gray_24dp, R.drawable.ic_mode_edit_gray_24dp };
 
     private final static int ASK_OPEN_PERMISSION = 0;
 
@@ -60,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE},
                 ASK_OPEN_PERMISSION);
 
-        adapter = new MarkdownPagerAdapter(getSupportFragmentManager(), Titles, Images, Titles.length);
+        adapter = new MarkdownPagerAdapter(getSupportFragmentManager(), Titles,
+                selectedImgSrc, unselectedImgSrc, Titles.length);
 
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(adapter);

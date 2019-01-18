@@ -35,6 +35,9 @@ import android.widget.TextView;
 import com.kwony.mdpreview.R;
 import com.kwony.mdpreview.Tabs.Pager.MarkdownPagerAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SlidingTabLayout extends HorizontalScrollView {
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with
@@ -66,6 +69,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private final SlidingTabStrip mTabStrip;
 
+    private List<ImageView> mTabImageViews;
+
     public SlidingTabLayout(Context context) {
         this(context, null);
     }
@@ -86,6 +91,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         mTabStrip = new SlidingTabStrip(context);
         addView(mTabStrip, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        mTabImageViews = new ArrayList<ImageView>();
     }
 
     /**
@@ -249,10 +255,12 @@ public class SlidingTabLayout extends HorizontalScrollView {
             lp.weight = 1;
             lp.height = 150;
 
-            tabImageView.setImageResource(adapter.getPageImageResource(i));
+            tabImageView.setImageResource(i == 0 ?
+                    adapter.getPageSelectedImgSrc(i) : adapter.getPageUnSelectedImgSrc(i));
             tabView.setOnClickListener(tabClickListener);
 
             mTabStrip.addView(tabView);
+            mTabImageViews.add(tabImageView);
             if (i == mViewPager.getCurrentItem()) {
                 tabView.setSelected(true);
             }
@@ -294,6 +302,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private class InternalViewPagerListener implements ViewPager.OnPageChangeListener {
         private int mScrollState;
+        final MarkdownPagerAdapter adapter = (MarkdownPagerAdapter) mViewPager.getAdapter();
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -334,6 +343,11 @@ public class SlidingTabLayout extends HorizontalScrollView {
             }
             for (int i = 0; i < mTabStrip.getChildCount(); i++) {
                 mTabStrip.getChildAt(i).setSelected(position == i);
+
+                if (mShowImage) {
+                    mTabImageViews.get(i).setImageResource(position == i ?
+                    adapter.getPageSelectedImgSrc(i) : adapter.getPageUnSelectedImgSrc(i));
+                }
             }
             if (mViewPagerPageChangeListener != null) {
                 mViewPagerPageChangeListener.onPageSelected(position);

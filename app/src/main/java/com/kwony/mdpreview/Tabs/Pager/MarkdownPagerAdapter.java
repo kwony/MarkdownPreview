@@ -14,7 +14,8 @@ import com.kwony.mdpreview.Tabs.MarkdownTabs.PreviewTab;
 public class MarkdownPagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs = 2;
     CharSequence mTitles[];
-    int mImageResources[];
+    int mSelectedImgSrc[];
+    int mUnSelectedImgSrc[];
 
     SparseArray<IMarkdownTab> registeredTabs = new SparseArray<>();
 
@@ -26,13 +27,15 @@ public class MarkdownPagerAdapter extends FragmentStatePagerAdapter {
         this.mNumOfTabs = numOfTabs;
     }
 
-    public MarkdownPagerAdapter(FragmentManager fm, CharSequence titles[], int images[],
+    public MarkdownPagerAdapter(FragmentManager fm, CharSequence titles[],
+                                int selectedImgSrc[], int unselectedImgSrc[],
                                 int numOfTabs) {
         super(fm);
 
         this.mTitles = titles;
         this.mNumOfTabs = numOfTabs;
-        this.mImageResources = images;
+        this.mSelectedImgSrc = selectedImgSrc;
+        this.mUnSelectedImgSrc = unselectedImgSrc;
     }
 
     @Override
@@ -75,7 +78,8 @@ public class MarkdownPagerAdapter extends FragmentStatePagerAdapter {
         super.destroyItem(container, position, object);
     }
 
-    public int getPageImageResource(int position) { return mImageResources[position]; }
+    public int getPageSelectedImgSrc(int position) { return mSelectedImgSrc[position]; }
+    public int getPageUnSelectedImgSrc(int position) { return mUnSelectedImgSrc[position]; }
 
     public IMarkdownTab getRegisteredTab(int position) {
         return registeredTabs.get(position);
