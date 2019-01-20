@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:background="@android:drawable/screen_background_light_transparent"
                     android:padding="3dp"
-                    android:src="@drawable/round_folder_black_24dp" />
+                    android:src="@drawable/round_folder_open_black_24dp" />
             </android.support.constraint.ConstraintLayout>
 
             <android.support.constraint.ConstraintLayout
