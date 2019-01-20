@@ -242,6 +242,12 @@ public class MainActivity extends AppCompatActivity {
             tvTitle.setText(fileInfo.getFileName());
             updateWorkspaceFile(fileInfo);
         }
+
+        for (int i = 0; i < adapter.getCount(); i++) {
+            IMarkdownTab imt = adapter.getRegisteredTab(i);
+            if (imt != null)
+                imt.cbSetTabView();
+        }
     }
 
     private void createWorkspaceFile() {

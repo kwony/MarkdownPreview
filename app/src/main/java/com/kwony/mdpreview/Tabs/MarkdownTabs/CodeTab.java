@@ -52,6 +52,13 @@ public class CodeTab extends Fragment implements IMarkdownTab {
         saveFile();
     }
 
+    public void cbSetTabView() {
+        etCode.setText(FileManager.readFileValue(
+                Environment.getExternalStorageDirectory()
+                        + File.separator + getString(R.string.app_name),
+                getString(R.string.mirror_file_md)), TextView.BufferType.EDITABLE);
+    }
+
     private void saveFile() {
         FileManager.writeFileValue(Environment.getExternalStorageDirectory()
                         + File.separator + getString(R.string.app_name),

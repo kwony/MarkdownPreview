@@ -41,6 +41,10 @@ public class PreviewTab extends Fragment implements IMarkdownTab {
 
     }
 
+    public void cbSetTabView() {
+        showParsedMarkdown();
+    }
+
     private void showParsedMarkdown() {
         StringBuffer fileValue = FileManager.readFileValue(
                 Environment.getExternalStorageDirectory()
