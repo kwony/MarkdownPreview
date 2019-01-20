@@ -240,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         else {
             tvTitle = findViewById(R.id.tvTitle);
             tvTitle.setText(fileInfo.getFileName());
-            openFile(fileInfo);
+            updateWorkspaceFile(fileInfo);
         }
     }
 
@@ -272,8 +272,8 @@ public class MainActivity extends AppCompatActivity {
         return rctFileInfo;
     }
 
-    private void openFile(FileInfo fileInfo) {
-        boolean opened = false;
+    private void updateWorkspaceFile(FileInfo fileInfo) {
+        boolean updated = false;
 
         String mirrorFilePath =
                 Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
@@ -282,12 +282,12 @@ public class MainActivity extends AppCompatActivity {
         FileInfo mirrorFile = new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
 
         try {
-            opened = FileManager.copyFile(fileInfo, mirrorFile);
+            updated = FileManager.copyFile(fileInfo, mirrorFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (!opened) {
+        if (!updated) {
             createWorkspaceFile();
         }
     }
