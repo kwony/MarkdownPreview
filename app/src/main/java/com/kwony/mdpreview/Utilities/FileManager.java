@@ -33,21 +33,22 @@ public class FileManager {
     public static final void createFile(String dst, String fileName, String initialValue) {
         File file = new File(dst + File.separator + fileName);
 
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
+        if (file.exists())
+            file.delete();
 
-                final String welcomeString = new String(initialValue);
-                FileOutputStream fOut = new FileOutputStream(file);
-                OutputStreamWriter osw = new OutputStreamWriter(fOut);
+        try {
+            file.createNewFile();
 
-                osw.write(welcomeString);
-                osw.flush();
-                osw.close();
+            final String welcomeString = new String(initialValue);
+            FileOutputStream fOut = new FileOutputStream(file);
+            OutputStreamWriter osw = new OutputStreamWriter(fOut);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            osw.write(welcomeString);
+            osw.flush();
+            osw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
