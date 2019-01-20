@@ -19,11 +19,11 @@ import com.kwony.mdpreview.Utilities.FileManager;
 
 import java.io.IOException;
 
-public class CreateFileBuilder {
+public class SaveFileDialog {
     private Activity mActivity;
     private RecentFileManager rctFileManager;
 
-    public CreateFileBuilder(Activity activity) {
+    public SaveFileDialog(Activity activity) {
         mActivity = activity;
         rctFileManager = new RecentFileManager();
     }
@@ -31,7 +31,7 @@ public class CreateFileBuilder {
     /* Get file name input and create new file.
      * @srcFileInfo: Source file information for new one.
      */
-    public FileInfo createFileDialog(final FileInfo srcFileInfo) {
+    public FileInfo saveFileDialog(final FileInfo srcFileInfo) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         LayoutInflater inflater = mActivity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_save_file, null);
@@ -56,6 +56,10 @@ public class CreateFileBuilder {
                 FileInfo dstFileInfo = new FileInfo(-1, etFileName.getText().toString(),
                         srcFileInfo.getFilePath(), srcFileInfo.getFileDate());
 
+                /*
+                 * TODO: Check there is file which has same name.
+                 */
+
                 long newFileId = rctFileManager.insertFileInfo(dstFileInfo);
                 sharedPrefManager.setCurrentFileId(newFileId);
 
@@ -65,7 +69,7 @@ public class CreateFileBuilder {
                     e.printStackTrace();
                 }
 
-                mActivity.sendBroadcast(new Intent(MainActivity.BR_CREATE_DIALOG));
+                mActivity.sendBroadcast(new Intent(MainActivity.BR_SAVE_DIALOG));
             }
         });
 

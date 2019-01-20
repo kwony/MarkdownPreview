@@ -8,22 +8,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.kwony.mdpreview.Builders.CreateFileBuilder;
+import com.kwony.mdpreview.Builders.SaveFileDialog;
 import com.kwony.mdpreview.Database.DatabaseHelper;
 import com.kwony.mdpreview.Database.DatabaseManager;
 import com.kwony.mdpreview.Database.SharedPreferenceManager;
@@ -37,7 +34,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
-    public final static String BR_CREATE_DIALOG = "com.kwony.mdpreview.br.createdialog";
+    public final static String BR_SAVE_DIALOG = "com.kwony.mdpreview.br.savedialog";
 
     private ViewPager viewPager;
     private MarkdownPagerAdapter adapter;
@@ -121,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         prepareWorkspace();
 
         dialogIntentFilter = new IntentFilter();
-        dialogIntentFilter.addAction(BR_CREATE_DIALOG);
+        dialogIntentFilter.addAction(BR_SAVE_DIALOG);
 
         dialogReceiver = new DialogReceiver();
 
@@ -157,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
-                CreateFileBuilder saveFileBuilder = new CreateFileBuilder(MainActivity.this);
+                SaveFileDialog saveFileBuilder = new SaveFileDialog(MainActivity.this);
 
                 String mirrorFilePath =
                         Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
@@ -167,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (sharedPrefMgr.getCurrentFileId() == -1) {
                     /* Case name is required */
-                    saveFileBuilder.createFileDialog(mirrorFile);
+                    saveFileBuilder.saveFileDialog(mirrorFile);
                 }
                 else {
                     /* Case source file exist */
