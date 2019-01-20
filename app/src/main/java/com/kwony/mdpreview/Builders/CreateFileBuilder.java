@@ -2,6 +2,7 @@ package com.kwony.mdpreview.Builders;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.kwony.mdpreview.Database.SharedPreferenceManager;
 import com.kwony.mdpreview.Database.Tables.RecentFileManager;
 import com.kwony.mdpreview.FileInfo;
+import com.kwony.mdpreview.MainActivity;
 import com.kwony.mdpreview.R;
 import com.kwony.mdpreview.Utilities.FileManager;
 
@@ -62,6 +64,8 @@ public class CreateFileBuilder {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                mActivity.sendBroadcast(new Intent(MainActivity.BR_CREATE_DIALOG));
             }
         });
 

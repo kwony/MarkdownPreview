@@ -2,7 +2,10 @@ package com.kwony.mdpreview;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -33,9 +36,13 @@ import java.io.File;
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
+    public final static String BR_CREATE_DIALOG = "com.kwony.mdpreview.br.createdialog";
+
     private ViewPager viewPager;
     private MarkdownPagerAdapter adapter;
     private SlidingTabLayout tabs;
+
+    private DialogReceiver dialogReceiver;
 
     private TextView tvTitle;
 
@@ -110,6 +117,13 @@ public class MainActivity extends AppCompatActivity {
 
         FileInfo rctFile = readRecentFileInfo();
         prepareWorkspace(rctFile);
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BR_CREATE_DIALOG);
+
+        dialogReceiver = new DialogReceiver();
+
+        registerReceiver(dialogReceiver, intentFilter);
     }
 
     private void paletteSetup() {
@@ -151,8 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (sharedPrefMgr.getCurrentFileId() == -1) {
                     /* Case name is required */
-                    FileInfo newFile = saveFileBuilder.createFileDialog(mirrorFile);
-                    prepareWorkspace(newFile);
+                    saveFileBuilder.createFileDialog(mirrorFile);
                 }
                 else {
                     /* Case source file exist */
@@ -305,4 +318,12 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    private class DialogReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            FileInfo fileInfo = readRecentFileInfo();
+            prepareWorkspace(fileInfo);
+        }
+    }
 }
