@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwony.mdpreview.Builders.CreateFileBuilder;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private MarkdownPagerAdapter adapter;
     private SlidingTabLayout tabs;
+
+    private TextView tvTitle;
 
     private ImageButton ibShare;
     private ImageButton ibOpen;
@@ -103,9 +106,10 @@ public class MainActivity extends AppCompatActivity {
         // XXX: setViewPage should be called at last to apply settings.
         tabs.setViewPager(viewPager);
 
-        createWorkspaceFile();
-
         initializeDatabase();
+
+        FileInfo rctFile = readRecentFileInfo();
+        prepareWorkspace(rctFile);
     }
 
     private void paletteSetup() {
@@ -147,7 +151,8 @@ public class MainActivity extends AppCompatActivity {
 
                 if (sharedPrefMgr.getCurrentFileId() == -1) {
                     /* Case name is required */
-                    saveFileBuilder.createFileDialog(mirrorFile);
+                    FileInfo newFile = saveFileBuilder.createFileDialog(mirrorFile);
+                    prepareWorkspace(newFile);
                 }
                 else {
                     /* Case source file exist */
@@ -159,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+                    prepareWorkspace(srcFileInfo);
                 }
             }
         });
@@ -179,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            createWorkspaceFile();
+            prepareWorkspace(null);
 
             break;
         }
@@ -214,6 +221,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void prepareWorkspace(FileInfo fileInfo) {
+        if (fileInfo == null)
+            createWorkspaceFile();
+        else {
+            tvTitle = findViewById(R.id.tvTitle);
+            tvTitle.setText(fileInfo.getFileName());
+            openFile(fileInfo);
+        }
+    }
+
     private void createWorkspaceFile() {
         boolean folderCreated;
 
@@ -225,6 +242,40 @@ public class MainActivity extends AppCompatActivity {
             FileManager.createFile(
                     Environment.getExternalStorageDirectory() + File.separator + "/" + getString(R.string.app_name) + "/"
                     , getString(R.string.mirror_file_md), getString(R.string.initial_mirror_value));
+        }
+    }
+
+    /* Return 'true' on reading recent file, 'false' on failure */
+    private FileInfo readRecentFileInfo() {
+        SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
+        RecentFileManager rctFileMgr = new RecentFileManager();
+        long rctFileId = sharedPrefMgr.getCurrentFileId();
+
+        if (rctFileId == -1)
+            return null;
+
+        FileInfo rctFileInfo = rctFileMgr.getFileInfo(rctFileId);
+
+        return rctFileInfo;
+    }
+
+    private void openFile(FileInfo fileInfo) {
+        boolean opened = false;
+
+        String mirrorFilePath =
+                Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
+        String mirrorFileName = getString(R.string.mirror_file_md);
+
+        FileInfo mirrorFile = new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
+
+        try {
+            opened = FileManager.copyFile(fileInfo, mirrorFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (!opened) {
+            createWorkspaceFile();
         }
     }
 

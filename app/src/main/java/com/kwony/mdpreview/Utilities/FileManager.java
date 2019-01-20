@@ -108,9 +108,12 @@ public class FileManager {
         }
     }
 
-    public static void copyFile(FileInfo srcInfo, FileInfo dstInfo) throws IOException {
+    public static boolean copyFile(FileInfo srcInfo, FileInfo dstInfo) throws IOException {
         File srcFile = new File(srcInfo.getFilePath() + File.separator + srcInfo.getFileName());
         File dstFile = new File(dstInfo.getFilePath() + File.separator + dstInfo.getFileName());
+
+        if (!srcFile.exists())
+            return false;
 
         if (!dstFile.exists())
             dstFile.createNewFile();
@@ -125,5 +128,7 @@ public class FileManager {
                 }
             }
         }
+
+        return true;
     }
 }
