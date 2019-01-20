@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kwony.mdpreview.Builders.SaveFileDialog;
+import com.kwony.mdpreview.Builders.SelectFileDialog;
 import com.kwony.mdpreview.Database.DatabaseHelper;
 import com.kwony.mdpreview.Database.DatabaseManager;
 import com.kwony.mdpreview.Database.SharedPreferenceManager;
@@ -35,6 +36,7 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     public final static String BR_SAVE_DIALOG = "com.kwony.mdpreview.br.savedialog";
+    public final static String BR_SELECT_DIALOG = "com.kwony.mdpreview.br.selectdialog";
 
     private ViewPager viewPager;
     private MarkdownPagerAdapter adapter;
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
         dialogIntentFilter = new IntentFilter();
         dialogIntentFilter.addAction(BR_SAVE_DIALOG);
+        dialogIntentFilter.addAction(BR_SELECT_DIALOG);
 
         dialogReceiver = new DialogReceiver();
 
@@ -146,7 +149,8 @@ public class MainActivity extends AppCompatActivity {
         ibOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openFileContent();
+                SelectFileDialog selectFileDialog = new SelectFileDialog(MainActivity.this);
+                selectFileDialog.selectFileDialog();
             }
         });
 
