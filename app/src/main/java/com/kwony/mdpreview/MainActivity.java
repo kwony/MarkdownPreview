@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        tvTitle = findViewById(R.id.tvTitle);
         paletteSetup();
 
         ActivityCompat.requestPermissions(MainActivity.this,
@@ -115,8 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
         initializeDatabase();
 
-        FileInfo rctFile = readRecentFileInfo();
-        prepareWorkspace(rctFile);
+        prepareWorkspace();
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BR_CREATE_DIALOG);
@@ -177,8 +178,6 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-                    prepareWorkspace(srcFileInfo);
                 }
             }
         });
@@ -199,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            prepareWorkspace(null);
+            prepareWorkspace();
 
             break;
         }
@@ -234,13 +233,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void prepareWorkspace(FileInfo fileInfo) {
-        if (fileInfo == null)
+    private void prepareWorkspace() {
+        FileInfo rctFile = readRecentFileInfo();
+
+        if (rctFile == null) {
+            tvTitle.setText("NoTitle");
             createWorkspaceFile();
+        }
         else {
-            tvTitle = findViewById(R.id.tvTitle);
-            tvTitle.setText(fileInfo.getFileName());
-            updateWorkspaceFile(fileInfo);
+            tvTitle.setText(rctFile.getFileName());
+            updateWorkspaceFile(rctFile);
         }
 
         for (int i = 0; i < adapter.getCount(); i++) {
@@ -328,8 +330,7 @@ public class MainActivity extends AppCompatActivity {
     private class DialogReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            FileInfo fileInfo = readRecentFileInfo();
-            prepareWorkspace(fileInfo);
+            prepareWorkspace();
         }
     }
 }
