@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private SlidingTabLayout tabs;
 
     private DialogReceiver dialogReceiver;
+    private IntentFilter dialogIntentFilter;
 
     private TextView tvTitle;
 
@@ -119,12 +120,12 @@ public class MainActivity extends AppCompatActivity {
 
         prepareWorkspace();
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BR_CREATE_DIALOG);
+        dialogIntentFilter = new IntentFilter();
+        dialogIntentFilter.addAction(BR_CREATE_DIALOG);
 
         dialogReceiver = new DialogReceiver();
 
-        registerReceiver(dialogReceiver, intentFilter);
+        registerReceiver(dialogReceiver, dialogIntentFilter);
     }
 
     private void paletteSetup() {
@@ -232,6 +233,24 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(dialogReceiver, dialogIntentFilter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(dialogReceiver);
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(dialogReceiver);
     }
 
     private void openFileContent() {
