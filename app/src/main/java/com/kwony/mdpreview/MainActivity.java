@@ -181,6 +181,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        ibAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* TODO: Ask already working file needs save */
+
+                SharedPreferenceManager shrPrefMgr = SharedPreferenceManager.getInstance();
+                shrPrefMgr.setCurrentFileId(-1);
+                prepareWorkspace();
+            }
+        });
     }
 
     @Override
