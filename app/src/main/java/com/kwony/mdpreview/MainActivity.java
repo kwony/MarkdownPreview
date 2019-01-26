@@ -242,19 +242,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        registerReceiver(dialogReceiver, dialogIntentFilter);
     }
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(dialogReceiver);
         super.onDestroy();
+        unregisterReceiver(dialogReceiver);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(dialogReceiver);
     }
 
     private void openFileContent() {
