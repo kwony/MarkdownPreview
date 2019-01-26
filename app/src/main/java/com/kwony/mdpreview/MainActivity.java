@@ -33,6 +33,7 @@ import com.kwony.mdpreview.Utilities.FileManager;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public final static String BR_SAVE_DIALOG = "com.kwony.mdpreview.br.savedialog";
@@ -336,9 +337,20 @@ public class MainActivity extends AppCompatActivity {
     private void initializeDatabase() {
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
         databaseHelper.registerTableManager(new RecentFileManager());
-        DatabaseManager.initInstance(databaseHelper);
 
+        /* Initialize database instance */
+        DatabaseManager.initInstance(databaseHelper);
         SharedPreferenceManager.initInstance(getApplicationContext());
+
+        /* Synchronize database file info list with system file */
+        RecentFileManager rctFileMgr = new RecentFileManager();
+        List<FileInfo> listFileInfo = rctFileMgr.getAllFileInfo();
+
+        for (FileInfo fileInfo: listFileInfo) {
+            if (!FileManager.checkFileExist(fileInfo)) {
+                rctFileMgr.removeFileInfo(fileInfo);
+            }
+        }
     }
 
     private View.OnTouchListener ibTouchListener = new View.OnTouchListener() {
