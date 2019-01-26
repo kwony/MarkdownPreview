@@ -13,7 +13,7 @@ public class SelectActivity extends AppCompatActivity {
     private RecentFileManager recentFileManager;
     private SelectFileAdapter selectFileAdapter;
 
-    private static final int GRID_SPAN_NUM = 2;
+    private static final int GRID_SPAN_NUM = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
