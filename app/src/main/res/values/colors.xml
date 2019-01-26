@@ -7,4 +7,5 @@
     <color name="background">#FFFFFF</color>
     <color name="titleText">#000000</color>
     <color name="slidingBar">#FF000000</color>
+    <color name="selectBackground">#FFEDEDED</color>
 </resources>
