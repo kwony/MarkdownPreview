@@ -111,6 +111,19 @@ public class RecentFileManager implements TableManager {
         return newFileId;
     }
 
+    public void removeFileInfo(FileInfo fileInfo) {
+        SQLiteDatabase db = DatabaseManager.getInstance().openDatabase();
+
+        db.beginTransaction();
+
+        if (fileInfo.getFileId() >= 0) { deleteFileInfo(db, fileInfo); }
+
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
+        DatabaseManager.getInstance().closeDatabase();
+    }
+
     private long addFileInfo(SQLiteDatabase db, FileInfo fileInfo) {
         long newFileId = -1;
         ContentValues contentValues = new ContentValues();
