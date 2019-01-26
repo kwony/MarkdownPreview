@@ -269,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
     private void prepareWorkspace() {
         FileInfo rctFile = readRecentFileInfo();
 
-        if (rctFile == null) {
+        if (rctFile == null || !FileManager.checkFileExist(rctFile)) {
             tvTitle.setText("NoTitle");
             createWorkspaceFile();
         }

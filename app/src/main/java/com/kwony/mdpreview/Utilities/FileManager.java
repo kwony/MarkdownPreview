@@ -52,6 +52,13 @@ public class FileManager {
         }
     }
 
+    public static final boolean checkFileExist(FileInfo fileInfo) {
+        File file = new File(fileInfo.getFilePath()
+                + File.separator + fileInfo.getFileName());
+
+        return file.exists();
+    }
+
     public static final StringBuffer readFileValue(String filePath, String fileName) {
         StringBuffer outStringBuf = new StringBuffer();
         String inputLine = null;
