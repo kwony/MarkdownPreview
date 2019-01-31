@@ -7,6 +7,7 @@ import com.kwony.mdpreview.FileInfo;
 import com.kwony.mdpreview.R;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -57,6 +58,33 @@ public class FileManager {
                 + File.separator + fileInfo.getFileName());
 
         return file.exists();
+    }
+
+    public static final boolean compareFileContent(FileInfo firstFileInfo, FileInfo secondFileInfo) {
+        File firstFile = new File(firstFileInfo.getFilePath()
+                + File.separator + firstFileInfo.getFileName());
+
+        File secondFile = new File(secondFileInfo.getFilePath()
+                + File.separator + secondFileInfo.getFileName());
+
+        try {
+            FileInputStream f1 = new FileInputStream(firstFile);
+            FileInputStream f2 = new FileInputStream(secondFile);
+
+            int data;
+
+            while ((data = f1.read()) != -1) {
+                if (data != f2.read())
+                    return false;
+            }
+
+        } catch (FileNotFoundException e) {
+            return false;
+        } catch (IOException e) {
+            return false;
+        }
+
+        return true;
     }
 
     public static final StringBuffer readFileValue(String filePath, String fileName) {
