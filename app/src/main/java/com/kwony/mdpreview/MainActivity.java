@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kwony.mdpreview.Builders.SaveFileDialog;
 import com.kwony.mdpreview.Builders.SelectFileDialog;
@@ -39,6 +40,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public final static String BR_SAVE_DIALOG = "com.kwony.mdpreview.br.savedialog";
     public final static String BR_SELECT_DIALOG = "com.kwony.mdpreview.br.selectdialog";
+    public final static String RC_FILE_ID = "result_code_file_id";
 
     private ViewPager viewPager;
     private MarkdownPagerAdapter adapter;
@@ -146,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SelectActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, PICK_FILE_RESULT_CODE);
             }
         });
 
@@ -236,6 +238,14 @@ public class MainActivity extends AppCompatActivity {
                  * 4. Run a thread to check whether two files are different
                  * */
 
+                // default file id and mirror file id should not be same
+                long checkedFileId = data.getLongExtra(RC_FILE_ID, -1);
+
+                if (isFileModified()) {
+                    /*
+                     * TODO: Show dialog to save or not
+                     */
+                }
             }
         }
     }
@@ -358,6 +368,24 @@ public class MainActivity extends AppCompatActivity {
 //                        "Not found File name : " + fileInfo.getFileName());
 //            }
 //        }
+    }
+
+    /* Is currently workspace file different from original one? */
+    private boolean isFileModified() {
+        SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
+        RecentFileManager rctFileManager = new RecentFileManager();
+
+        String mirrorFilePath =
+                Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
+        String mirrorFileName = getString(R.string.mirror_file_md);
+
+        FileInfo mirrorFile = new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
+        FileInfo originFile = rctFileManager.getFileInfo(sharedPrefMgr.getCurrentFileId());
+
+        if (!FileManager.compareFileContent(mirrorFile, originFile) )
+            return true;
+
+        return false;
     }
 
     private View.OnTouchListener ibTouchListener = new View.OnTouchListener() {
