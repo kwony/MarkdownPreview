@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -344,11 +345,19 @@ public class MainActivity extends AppCompatActivity {
         RecentFileManager rctFileMgr = new RecentFileManager();
         List<FileInfo> listFileInfo = rctFileMgr.getAllFileInfo();
 
-        for (FileInfo fileInfo: listFileInfo) {
-            if (!FileManager.checkFileExist(fileInfo)) {
-                rctFileMgr.removeFileInfo(fileInfo);
-            }
-        }
+//        /***
+//         * TODO: Unable to find file problem.
+//         * This is issue. Synchronizing database with real file data works until
+//         * system power down. After rebooted checkFileExist always return false
+//         * although it exists. It causes whole database files to be deleted
+//         ***/
+//        for (FileInfo fileInfo: listFileInfo) {
+//            if (!FileManager.checkFileExist(fileInfo)) {
+//                rctFileMgr.removeFileInfo(fileInfo);
+//                Log.d(MainActivity.class.getSimpleName(),
+//                        "Not found File name : " + fileInfo.getFileName());
+//            }
+//        }
     }
 
     private View.OnTouchListener ibTouchListener = new View.OnTouchListener() {
