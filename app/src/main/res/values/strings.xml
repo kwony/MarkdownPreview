@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">mdpreview</string>
 
+    <string name="ask_user_save_file"></string>
+
     <string name="builder_cancel">CANCEL</string>
+    <string name="builder_no">NO</string>
     <string name="builder_ok">OK</string>
     <string name="builder_select_file_title">Which file do you want to edit?</string>
+    <string name="builder_yes">YES</string>
     <string name="default_file_name">No Title</string>
     <string name="initial_mirror_value">## Hello World</string>
     <string name="invalid_file_name">Invalid File Name</string>
