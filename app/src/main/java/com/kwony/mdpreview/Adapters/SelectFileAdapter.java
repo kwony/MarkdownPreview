@@ -1,6 +1,8 @@
 package com.kwony.mdpreview.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -10,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.kwony.mdpreview.FileInfo;
+import com.kwony.mdpreview.MainActivity;
 import com.kwony.mdpreview.R;
 import com.kwony.mdpreview.SelectActivity;
 import com.kwony.mdpreview.Utilities.FileManager;
@@ -25,12 +29,12 @@ import java.io.File;
 import java.util.List;
 
 public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.ViewHolder> {
-    private Context mContext;
+    private Activity mActivity;
     private List<FileInfo> mListFileInfo;
 
 
-    public SelectFileAdapter(Context context, List<FileInfo> listFileInfo) {
-        mContext = context;
+    public SelectFileAdapter(Activity activity, List<FileInfo> listFileInfo) {
+        mActivity = activity;
         mListFileInfo = listFileInfo;
     }
 
@@ -38,6 +42,7 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
         TextView tvFileName;
         CardView cardView;
         WebView wvPreview;
+        ImageButton ibCheck;
 
         public ViewHolder(View view) {
             super(view);
@@ -45,6 +50,7 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
             tvFileName = (TextView) view.findViewById(R.id.tvFileName);
             cardView = (CardView) view.findViewById(R.id.cardView);
             wvPreview = (WebView) view.findViewById(R.id.wvPreview);
+            ibCheck = (ImageButton) view.findViewById(R.id.ibCheck);
         }
     }
 
@@ -59,18 +65,29 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FileInfo fileInfo = mListFileInfo.get(position);
+        final FileInfo fileInfo = mListFileInfo.get(position);
         holder.tvFileName.setText(fileInfo.getFileName());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+            }
+        });
+
+        holder.ibCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 // TODO: Return to MainActivity with leaving sending file id.
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(MainActivity.RC_FILE_ID, fileInfo.getFileId());
+                mActivity.setResult(Activity.RESULT_OK, resultIntent);
+                mActivity.finish();
             }
         });
 
         StringBuffer fileValue = FileManager.readFileValue(
                 Environment.getExternalStorageDirectory()
-                        + File.separator + mContext.getString(R.string.app_name),
+                        + File.separator + mActivity.getString(R.string.app_name),
                 fileInfo.getFileName());
 
         Log.d(SelectFileAdapter.class.getSimpleName(), "fileValue: " + fileValue);

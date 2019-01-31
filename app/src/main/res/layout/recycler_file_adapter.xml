@@ -48,6 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <ImageButton
+                    android:id="@+id/ibCheck"
                     android:paddingHorizontal="2dp"
                     android:background="@android:drawable/screen_background_light_transparent"
                     android:src="@drawable/ic_check_gray_24dp"
