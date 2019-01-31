@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kwony.mdpreview.Builders.AskDialog;
 import com.kwony.mdpreview.Builders.SaveFileDialog;
 import com.kwony.mdpreview.Builders.SelectFileDialog;
 import com.kwony.mdpreview.Database.DatabaseHelper;
@@ -40,7 +41,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     public final static String BR_SAVE_DIALOG = "com.kwony.mdpreview.br.savedialog";
     public final static String BR_SELECT_DIALOG = "com.kwony.mdpreview.br.selectdialog";
+    public final static String BR_ASK_DIALOG = "com.kwony.mdpreview.br.askdialog";
     public final static String RC_FILE_ID = "result_code_file_id";
+
+
 
     private ViewPager viewPager;
     private MarkdownPagerAdapter adapter;
@@ -126,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
         dialogIntentFilter = new IntentFilter();
         dialogIntentFilter.addAction(BR_SAVE_DIALOG);
         dialogIntentFilter.addAction(BR_SELECT_DIALOG);
+        dialogIntentFilter.addAction(BR_ASK_DIALOG);
 
         dialogReceiver = new DialogReceiver();
 
@@ -239,12 +244,17 @@ public class MainActivity extends AppCompatActivity {
                  * */
 
                 // default file id and mirror file id should not be same
-                long checkedFileId = data.getLongExtra(RC_FILE_ID, -1);
+                long openFileId = data.getLongExtra(RC_FILE_ID, -1);
 
                 if (isFileModified()) {
                     /*
                      * TODO: Show dialog to save or not
                      */
+
+                    AskDialog askDialog = new AskDialog(MainActivity.this,
+                            getResources().getString(R.string.ask_user_save_file), openFileId);
+
+                    askDialog.askDialog();
                 }
             }
         }
@@ -410,7 +420,20 @@ public class MainActivity extends AppCompatActivity {
     private class DialogReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            prepareWorkspace();
+            if (BR_ASK_DIALOG.equals(intent.getAction())) {
+                boolean retStatus = intent.getBooleanExtra(AskDialog.RETURN_STATUS, false);
+                long openFileId = intent.getLongExtra(AskDialog.OPEN_FILE_ID, -1);
+
+                if (retStatus) {
+                    // TODO: Copy mirror file to original one
+                }
+
+                // TODO: Open file which has openFileId as file id.
+
+            }
+            else if (BR_SELECT_DIALOG.equals(intent.getAction())) {
+                prepareWorkspace();
+            }
         }
     }
 }
