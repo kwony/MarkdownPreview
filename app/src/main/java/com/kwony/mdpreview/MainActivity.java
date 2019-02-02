@@ -247,15 +247,15 @@ public class MainActivity extends AppCompatActivity {
                 long openFileId = data.getLongExtra(RC_FILE_ID, -1);
 
                 if (isFileModified()) {
-                    /*
-                     * TODO: Show dialog to save or not
-                     */
-
+                    /* Ask user to save it or not */
                     AskDialog askDialog = new AskDialog(MainActivity.this,
                             getResources().getString(R.string.ask_user_save_file), openFileId);
 
                     askDialog.askDialog();
+                    return;
                 }
+
+                prepareWorkspace(openFileId);
             }
         }
     }
@@ -303,6 +303,13 @@ public class MainActivity extends AppCompatActivity {
             if (imt != null)
                 imt.cbSetTabView();
         }
+    }
+
+    private void prepareWorkspace(long newMirrorId) {
+        SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
+        sharedPrefMgr.setCurrentFileId(newMirrorId);
+
+        prepareWorkspace();
     }
 
     private void createWorkspaceFile() {
@@ -425,11 +432,25 @@ public class MainActivity extends AppCompatActivity {
                 long openFileId = intent.getLongExtra(AskDialog.OPEN_FILE_ID, -1);
 
                 if (retStatus) {
-                    // TODO: Copy mirror file to original one
+                    /* Copy mirror file to original one to save it */
+                    RecentFileManager rctFileMgr = new RecentFileManager();
+                    SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
+
+                    String mirrorFilePath =
+                            Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
+                    String mirrorFileName = getString(R.string.mirror_file_md);
+
+                    FileInfo mirrorFile = new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
+                    FileInfo originFile = rctFileMgr.getFileInfo(sharedPrefMgr.getCurrentFileId());
+
+                    try {
+                        FileManager.copyFile(mirrorFile, originFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                // TODO: Open file which has openFileId as file id.
-
+                prepareWorkspace(openFileId);
             }
             else if (BR_SELECT_DIALOG.equals(intent.getAction())) {
                 prepareWorkspace();
