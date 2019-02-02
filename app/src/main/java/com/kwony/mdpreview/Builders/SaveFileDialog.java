@@ -20,6 +20,7 @@ import com.kwony.mdpreview.Utilities.FileManager;
 import java.io.IOException;
 
 public class SaveFileDialog {
+    public static final String OPEN_FILE_ID = "open_file_id";
     private Activity mActivity;
     private RecentFileManager rctFileManager;
 
@@ -43,8 +44,6 @@ public class SaveFileDialog {
         builder.setPositiveButton(mActivity.getString(R.string.builder_ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                SharedPreferenceManager sharedPrefManager = SharedPreferenceManager.getInstance();
-
                 if (etFileName.getText().toString() == null
                         || etFileName.getText().toString().length() == 0) {
                     Toast.makeText(mActivity.getApplicationContext(),
@@ -61,7 +60,8 @@ public class SaveFileDialog {
                  */
 
                 long newFileId = rctFileManager.insertFileInfo(dstFileInfo);
-                sharedPrefManager.setCurrentFileId(newFileId);
+                Intent intent = new Intent(MainActivity.BR_SAVE_DIALOG);
+                intent.putExtra(OPEN_FILE_ID, newFileId);
 
                 try {
                     FileManager.copyFile(srcFileInfo, dstFileInfo);
@@ -69,7 +69,7 @@ public class SaveFileDialog {
                     e.printStackTrace();
                 }
 
-                mActivity.sendBroadcast(new Intent(MainActivity.BR_SAVE_DIALOG));
+                mActivity.sendBroadcast(intent);
             }
         });
 
