@@ -14,8 +14,6 @@ import com.kwony.mdpreview.R;
 import java.util.List;
 
 public class AskDialog {
-    public final static String RETURN_STATUS = "return_status";
-    public final static String OPEN_FILE_ID = "open_file_id";
 
     private Activity mActivity;
     private String mTitle;
@@ -29,17 +27,16 @@ public class AskDialog {
 
     public void askDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-
+        final SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
 
         builder.setTitle(mTitle)
                 .setPositiveButton(mActivity.getResources().getString(R.string.builder_yes),
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(MainActivity.BR_ASK_DIALOG);
-
-                        intent.putExtra(RETURN_STATUS, true);
-                        intent.putExtra(OPEN_FILE_ID, mOpenFileId);
+                        Intent intent = new Intent(MainActivity.BR_SAVE_OPEN);
+                        intent.putExtra(MainActivity.KEY_SAVE_FILE_ID, sharedPrefMgr.getCurrentFileId());
+                        intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, mOpenFileId);
 
                         mActivity.sendBroadcast(intent);
                     }
@@ -47,9 +44,8 @@ public class AskDialog {
                 .setNegativeButton(mActivity.getResources().getString(R.string.builder_no), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(MainActivity.BR_ASK_DIALOG);
-                        intent.putExtra(RETURN_STATUS, false);
-                        intent.putExtra(OPEN_FILE_ID, mOpenFileId);
+                        Intent intent = new Intent(MainActivity.BR_OPEN);
+                        intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, mOpenFileId);
 
                         mActivity.sendBroadcast(intent);
                     }
