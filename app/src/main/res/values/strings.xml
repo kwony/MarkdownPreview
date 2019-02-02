@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">mdpreview</string>
 
-    <string name="ask_user_save_file"></string>
+    <string name="ask_user_save_file">Do you want to save current file?</string>
 
     <string name="builder_cancel">CANCEL</string>
     <string name="builder_no">NO</string>
