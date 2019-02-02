@@ -14,17 +14,14 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.kwony.mdpreview.Builders.AskDialog;
 import com.kwony.mdpreview.Builders.SaveFileDialog;
-import com.kwony.mdpreview.Builders.SelectFileDialog;
 import com.kwony.mdpreview.Database.DatabaseHelper;
 import com.kwony.mdpreview.Database.DatabaseManager;
 import com.kwony.mdpreview.Database.SharedPreferenceManager;
