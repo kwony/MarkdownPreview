@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -36,18 +37,18 @@ import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    public final static String BR_SAVE_DIALOG = "com.kwony.mdpreview.br.savedialog";
-    public final static String BR_SELECT_DIALOG = "com.kwony.mdpreview.br.selectdialog";
-    public final static String BR_ASK_DIALOG = "com.kwony.mdpreview.br.askdialog";
+    public final static String BR_SAVE_OPEN = "com.kwony.mdpreview.br.save_open";
+    public final static String BR_OPEN = "com.kwony.mdpreview.br.open";
     public final static String RC_FILE_ID = "result_code_file_id";
 
-
+    public final static String KEY_OPEN_FILE_ID = "key_open_file_id";
+    public final static String KEY_SAVE_FILE_ID = "key_save_file_id";
 
     private ViewPager viewPager;
     private MarkdownPagerAdapter adapter;
     private SlidingTabLayout tabs;
 
-    private DialogReceiver dialogReceiver;
+    private WorkspaceReceiver wsReceiver;
     private IntentFilter dialogIntentFilter;
 
     private TextView tvTitle;
@@ -125,13 +126,12 @@ public class MainActivity extends AppCompatActivity {
         prepareWorkspace();
 
         dialogIntentFilter = new IntentFilter();
-        dialogIntentFilter.addAction(BR_SAVE_DIALOG);
-        dialogIntentFilter.addAction(BR_SELECT_DIALOG);
-        dialogIntentFilter.addAction(BR_ASK_DIALOG);
+        dialogIntentFilter.addAction(BR_OPEN);
+        dialogIntentFilter.addAction(BR_SAVE_OPEN);
 
-        dialogReceiver = new DialogReceiver();
+        wsReceiver = new WorkspaceReceiver();
 
-        registerReceiver(dialogReceiver, dialogIntentFilter);
+        registerReceiver(wsReceiver, dialogIntentFilter);
     }
 
     private void paletteSetup() {
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(dialogReceiver);
+        unregisterReceiver(wsReceiver);
     }
 
     @Override
@@ -411,32 +411,47 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private class DialogReceiver extends BroadcastReceiver {
+    private class WorkspaceReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (BR_ASK_DIALOG.equals(intent.getAction())) {
-                boolean retStatus = intent.getBooleanExtra(AskDialog.RETURN_STATUS, false);
-                long openFileId = intent.getLongExtra(AskDialog.OPEN_FILE_ID, -1);
+            if (BR_OPEN.equals(intent.getAction())) {
+                long openFileId = intent.getLongExtra(KEY_OPEN_FILE_ID, -1);
 
-                if (retStatus) {
-                    /* Copy mirror file to original one to save it */
-
-                    FileInfo mirrorFile = getMirrorFileInfo();
-                    FileInfo originFile = getRecentFileInfo();
-
-                    try {
-                        FileManager.copyFile(mirrorFile, originFile);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                if (openFileId < 0) {
+                    Log.e(MainActivity.class.getSimpleName(), "Invalid openFileId");
+                    return;
                 }
 
                 prepareWorkspace(openFileId);
             }
-            else if (BR_SAVE_DIALOG.equals(intent.getAction())) {
-                long openFileId = intent.getLongExtra(SaveFileDialog.OPEN_FILE_ID, -1);
+            else if (BR_SAVE_OPEN.equals(intent.getAction())) {
+                /*
+                 * origFileId: Original file to be saved
+                 * openFileId: File to open after saving.
+                 */
+
+                RecentFileManager rctFileMgr = new RecentFileManager();
+                long origFileId = intent.getLongExtra(KEY_SAVE_FILE_ID, -1);
+                long openFileId = intent.getLongExtra(KEY_OPEN_FILE_ID, -1);
+
+                FileInfo mirrorFile = getMirrorFileInfo();
+                FileInfo originFile = rctFileMgr.getFileInfo(origFileId);
+
+                if (origFileId == -1 || openFileId == -1
+                        || mirrorFile == null || originFile == null) {
+                    Log.e(MainActivity.class.getSimpleName(), "Something Wrong!");
+                    return;
+                }
+
+                try {
+                    FileManager.copyFile(mirrorFile, originFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 prepareWorkspace(openFileId);
             }
+
         }
     }
 }

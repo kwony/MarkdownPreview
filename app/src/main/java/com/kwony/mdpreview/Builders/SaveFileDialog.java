@@ -20,7 +20,6 @@ import com.kwony.mdpreview.Utilities.FileManager;
 import java.io.IOException;
 
 public class SaveFileDialog {
-    public static final String OPEN_FILE_ID = "open_file_id";
     private Activity mActivity;
     private RecentFileManager rctFileManager;
 
@@ -60,14 +59,9 @@ public class SaveFileDialog {
                  */
 
                 long newFileId = rctFileManager.insertFileInfo(dstFileInfo);
-                Intent intent = new Intent(MainActivity.BR_SAVE_DIALOG);
-                intent.putExtra(OPEN_FILE_ID, newFileId);
-
-                try {
-                    FileManager.copyFile(srcFileInfo, dstFileInfo);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                Intent intent = new Intent(MainActivity.BR_SAVE_OPEN);
+                intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, newFileId);
+                intent.putExtra(MainActivity.KEY_SAVE_FILE_ID, newFileId);
 
                 mActivity.sendBroadcast(intent);
             }
