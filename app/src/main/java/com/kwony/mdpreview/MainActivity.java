@@ -235,13 +235,15 @@ public class MainActivity extends AppCompatActivity {
 
                 // default file id and mirror file id should not be same
                 long openFileId = data.getLongExtra(RC_FILE_ID, -1);
+                SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
 
                 if (isFileModified()) {
                     /* Ask user to save it or not */
                     AskDialog askDialog = new AskDialog(MainActivity.this,
-                            getResources().getString(R.string.ask_user_save_file), openFileId);
+                            getResources().getString(R.string.ask_user_save_file),
+                            sharedPrefMgr.getCurrentFileId(), openFileId);
 
-                    askDialog.askDialog();
+                    askDialog.askSaveDialog();
                     return;
                 }
 
