@@ -441,6 +441,9 @@ public class MainActivity extends AppCompatActivity {
             else if (BR_SELECT_DIALOG.equals(intent.getAction())) {
                 prepareWorkspace();
             }
+            else if (BR_SAVE_DIALOG.equals(intent.getAction())) {
+                prepareWorkspace();
+            }
         }
     }
 }
