@@ -18,6 +18,7 @@ import com.kwony.mdpreview.R;
 import com.kwony.mdpreview.Utilities.FileManager;
 
 import java.io.IOException;
+import java.util.List;
 
 public class SaveFileDialog {
     private Activity mActivity;
@@ -36,6 +37,7 @@ public class SaveFileDialog {
         LayoutInflater inflater = mActivity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_save_file, null);
         final EditText etFileName = (EditText) dialogView.findViewById(R.id.etFileName);
+        final List<FileInfo> listFileInfo = rctFileManager.getAllFileInfo();
 
         etFileName.setText(new String(mActivity.getString(R.string.default_file_name)));
         builder.setView(dialogView);
@@ -43,20 +45,28 @@ public class SaveFileDialog {
         builder.setPositiveButton(mActivity.getString(R.string.builder_ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (etFileName.getText().toString() == null
-                        || etFileName.getText().toString().length() == 0) {
+                String fileName = etFileName.getText().toString();
+
+                if (fileName == null || fileName.length() == 0) {
                     Toast.makeText(mActivity.getApplicationContext(),
                             mActivity.getString(R.string.invalid_file_name), Toast.LENGTH_LONG);
                     return;
                 }
 
+                for (FileInfo fileInfo: listFileInfo) {
+                    if (fileInfo.getFileName().equals(fileName)) {
+                        AskDialog askDialog = new AskDialog(mActivity,
+                                mActivity.getString(R.string.ask_user_overwrite_file),
+                                fileInfo.getFileId(), fileInfo.getFileId());
+
+                        askDialog.askOverwriteDialog();
+                        return;
+                    }
+                }
+
                 // NOTE: Destination file follows source file path.
                 FileInfo dstFileInfo = new FileInfo(-1, etFileName.getText().toString(),
                         srcFileInfo.getFilePath(), srcFileInfo.getFileDate());
-
-                /*
-                 * TODO: Check there is file which has same name.
-                 */
 
                 long newFileId = rctFileManager.insertFileInfo(dstFileInfo);
                 Intent intent = new Intent(MainActivity.BR_SAVE_OPEN);
