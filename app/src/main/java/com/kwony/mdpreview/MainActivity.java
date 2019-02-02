@@ -171,11 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
                 SaveFileDialog saveFileBuilder = new SaveFileDialog(MainActivity.this);
 
-                String mirrorFilePath =
-                        Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
-                String mirrorFileName = getString(R.string.mirror_file_md);
-
-                FileInfo mirrorFile = new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
+                FileInfo mirrorFile = getMirrorFileInfo();
 
                 if (sharedPrefMgr.getCurrentFileId() == -1) {
                     /* Case name is required */
@@ -183,8 +179,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     /* Case source file exist */
-                    RecentFileManager rctFileManager = new RecentFileManager();
-                    FileInfo srcFileInfo = rctFileManager.getFileInfo(sharedPrefMgr.getCurrentFileId());
+                    FileInfo srcFileInfo = getRecentFileInfo();
 
                     try {
                         FileManager.copyFile(mirrorFile, srcFileInfo);
@@ -287,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareWorkspace() {
-        FileInfo rctFile = readRecentFileInfo();
+        FileInfo rctFile = getRecentFileInfo();
 
         if (rctFile == null || !FileManager.checkFileExist(rctFile)) {
             tvTitle.setText("NoTitle");
@@ -326,8 +321,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private FileInfo getMirrorFileInfo() {
+        String mirrorFilePath =
+                Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
+        String mirrorFileName = getString(R.string.mirror_file_md);
+
+        return new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
+    }
+
     /* Return 'true' on reading recent file, 'false' on failure */
-    private FileInfo readRecentFileInfo() {
+    private FileInfo getRecentFileInfo() {
         SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
         RecentFileManager rctFileMgr = new RecentFileManager();
         long rctFileId = sharedPrefMgr.getCurrentFileId();
@@ -343,11 +346,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateWorkspaceFile(FileInfo fileInfo) {
         boolean updated = false;
 
-        String mirrorFilePath =
-                Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
-        String mirrorFileName = getString(R.string.mirror_file_md);
-
-        FileInfo mirrorFile = new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
+        FileInfo mirrorFile = getMirrorFileInfo();
 
         try {
             updated = FileManager.copyFile(fileInfo, mirrorFile);
@@ -389,15 +388,8 @@ public class MainActivity extends AppCompatActivity {
 
     /* Is currently workspace file different from original one? */
     private boolean isFileModified() {
-        SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
-        RecentFileManager rctFileManager = new RecentFileManager();
-
-        String mirrorFilePath =
-                Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
-        String mirrorFileName = getString(R.string.mirror_file_md);
-
-        FileInfo mirrorFile = new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
-        FileInfo originFile = rctFileManager.getFileInfo(sharedPrefMgr.getCurrentFileId());
+        FileInfo mirrorFile = getMirrorFileInfo();
+        FileInfo originFile = getRecentFileInfo();
 
         if (!FileManager.compareFileContent(mirrorFile, originFile) )
             return true;
@@ -433,15 +425,9 @@ public class MainActivity extends AppCompatActivity {
 
                 if (retStatus) {
                     /* Copy mirror file to original one to save it */
-                    RecentFileManager rctFileMgr = new RecentFileManager();
-                    SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
 
-                    String mirrorFilePath =
-                            Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
-                    String mirrorFileName = getString(R.string.mirror_file_md);
-
-                    FileInfo mirrorFile = new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
-                    FileInfo originFile = rctFileMgr.getFileInfo(sharedPrefMgr.getCurrentFileId());
+                    FileInfo mirrorFile = getMirrorFileInfo();
+                    FileInfo originFile = getRecentFileInfo();
 
                     try {
                         FileManager.copyFile(mirrorFile, originFile);
