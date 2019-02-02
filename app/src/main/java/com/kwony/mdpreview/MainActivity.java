@@ -152,16 +152,14 @@ public class MainActivity extends AppCompatActivity {
         ibShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SelectActivity.class);
-                startActivityForResult(intent, PICK_FILE_RESULT_CODE);
             }
         });
 
         ibOpen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SelectFileDialog selectFileDialog = new SelectFileDialog(MainActivity.this);
-                selectFileDialog.selectFileDialog();
+                Intent intent = new Intent(MainActivity.this, SelectActivity.class);
+                startActivityForResult(intent, PICK_FILE_RESULT_CODE);
             }
         });
 
@@ -438,11 +436,9 @@ public class MainActivity extends AppCompatActivity {
 
                 prepareWorkspace(openFileId);
             }
-            else if (BR_SELECT_DIALOG.equals(intent.getAction())) {
-                prepareWorkspace();
-            }
             else if (BR_SAVE_DIALOG.equals(intent.getAction())) {
-                prepareWorkspace();
+                long openFileId = intent.getLongExtra(SaveFileDialog.OPEN_FILE_ID, -1);
+                prepareWorkspace(openFileId);
             }
         }
     }
