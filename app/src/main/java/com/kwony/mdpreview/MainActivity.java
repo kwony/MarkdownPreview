@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (sharedPrefMgr.getCurrentFileId() == -1) {
                     /* Case name is required */
-                    saveFileBuilder.saveFileDialog(mirrorFile);
+                    saveFileBuilder.saveFileDialog(mirrorFile, -1);
                 }
                 else {
                     /* Case source file exist */
@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                 long openFileId = data.getLongExtra(RC_FILE_ID, -1);
                 SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
 
-                if (isFileModified()) {
+                if (sharedPrefMgr.getCurrentFileId() == -1 || isFileModified()) {
                     /* Ask user to save it or not */
                     AskDialog askDialog = new AskDialog(MainActivity.this,
                             getResources().getString(R.string.ask_user_save_file),
@@ -439,7 +439,13 @@ public class MainActivity extends AppCompatActivity {
                 FileInfo mirrorFile = getMirrorFileInfo();
                 FileInfo originFile = rctFileMgr.getFileInfo(origFileId);
 
-                if (origFileId == -1 || openFileId == -1
+                if (origFileId == -1) {
+                    SaveFileDialog saveFileDialog = new SaveFileDialog(MainActivity.this);
+                    saveFileDialog.saveFileDialog(mirrorFile, openFileId);
+                    return;
+                }
+
+                if (openFileId == -1
                         || mirrorFile == null || originFile == null) {
                     Log.e(MainActivity.class.getSimpleName(), "Something Wrong!");
                     return;

@@ -31,8 +31,9 @@ public class SaveFileDialog {
 
     /* Get file name input and create new file.
      * @srcFileInfo: Source file information for new one.
+     * @openFileId: file to open after save.
      */
-    public FileInfo saveFileDialog(final FileInfo srcFileInfo) {
+    public FileInfo saveFileDialog(final FileInfo srcFileInfo, final long openFileId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         LayoutInflater inflater = mActivity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_save_file, null);
@@ -70,7 +71,8 @@ public class SaveFileDialog {
 
                 long newFileId = rctFileManager.insertFileInfo(dstFileInfo);
                 Intent intent = new Intent(MainActivity.BR_SAVE_OPEN);
-                intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, newFileId);
+                intent.putExtra(MainActivity.KEY_OPEN_FILE_ID,
+                        openFileId == -1 ? newFileId : openFileId);
                 intent.putExtra(MainActivity.KEY_SAVE_FILE_ID, newFileId);
 
                 mActivity.sendBroadcast(intent);
