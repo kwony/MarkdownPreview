@@ -1,6 +1,7 @@
 package com.kwony.mdpreview;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -17,9 +19,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.kwony.mdpreview.Builders.AskDialog;
 import com.kwony.mdpreview.Builders.SaveFileDialog;
@@ -175,12 +179,10 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     /* Case source file exist */
                     FileInfo srcFileInfo = getRecentFileInfo();
+                    FileInfo[] args = { mirrorFile, srcFileInfo };
 
-                    try {
-                        FileManager.copyFile(mirrorFile, srcFileInfo);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    FileCopyTask fileCopyTask = new FileCopyTask();
+                    fileCopyTask.execute(args);
                 }
             }
         });
@@ -438,6 +440,7 @@ public class MainActivity extends AppCompatActivity {
 
                 FileInfo mirrorFile = getMirrorFileInfo();
                 FileInfo originFile = rctFileMgr.getFileInfo(origFileId);
+                FileInfo openFile = rctFileMgr.getFileInfo(openFileId);
 
                 if (origFileId == -1) {
                     SaveFileDialog saveFileDialog = new SaveFileDialog(MainActivity.this);
@@ -451,15 +454,88 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                try {
-                    FileManager.copyFile(mirrorFile, originFile);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                prepareWorkspace(openFileId);
+                FileInfo[] args = { mirrorFile, originFile, openFile };
+                FileCopyTask fileCopyTask = new FileCopyTask();
+                fileCopyTask.execute(args);
             }
 
+        }
+    }
+
+    private class FileCopyTask extends AsyncTask<FileInfo, Void, Boolean> {
+        private int WAIT_BUFFER = 700;
+        private AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        private AlertDialog dialog;
+        private long openFileId = -1;
+
+        @Override
+        protected void onPreExecute() {
+            builder.setCancelable(false); // if you want user to wait for some process to finish,
+            builder.setView(R.layout.dialog_file_copy_task);
+            dialog = builder.create();
+            dialog.show();
+
+//            TODO: Resizing dialog width.
+//            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+//            lp.width = 500;
+//            lp.height = 500;
+//            lp.copyFrom(dialog.getWindow().getAttributes());
+//            dialog.getWindow().setAttributes(lp);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Boolean doInBackground(FileInfo... fileInfos) {
+            Boolean status = false;
+
+            /* Elements in array should be ordered in this way
+             * @ first element is mirror file.
+             * @ second element is original file
+             * @ third element is the file to be opened at last.
+             *
+             * Third element can be null. But others must be valid.
+             */
+            FileInfo mirrorFile = fileInfos[0];
+            FileInfo originFile = fileInfos[1];
+            FileInfo openFile = fileInfos.length < 3 ? null : fileInfos[2];
+
+            if (mirrorFile == null || originFile == null)
+                return false;
+
+            try {
+                Thread.sleep(WAIT_BUFFER);
+                status = FileManager.copyFile(mirrorFile, originFile);
+
+                if (status && openFile != null) {
+                    status = FileManager.copyFile(openFile, mirrorFile);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (openFile != null)
+                openFileId = openFile.getFileId();
+
+            return status;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            dialog.dismiss();
+
+            if (!result) {
+                Toast.makeText(MainActivity.this, "Failed to copy file",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (openFileId != -1)
+                prepareWorkspace(openFileId);
+
+            super.onPostExecute(result);
         }
     }
 }
