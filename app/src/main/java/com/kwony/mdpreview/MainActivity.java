@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
              */
 
             prepareWorkspace(!FileManager.checkFileExist(getMirrorFileInfo()));
+            syncDatabaseWithSystem();
 
             break;
         }
@@ -362,24 +363,20 @@ public class MainActivity extends AppCompatActivity {
         /* Initialize database instance */
         DatabaseManager.initInstance(databaseHelper);
         SharedPreferenceManager.initInstance(getApplicationContext());
+    }
 
+    private void syncDatabaseWithSystem() {
         /* Synchronize database file info list with system file */
         RecentFileManager rctFileMgr = new RecentFileManager();
         List<FileInfo> listFileInfo = rctFileMgr.getAllFileInfo();
 
-//        /***
-//         * TODO: Unable to find file problem.
-//         * This is issue. Synchronizing database with real file data works until
-//         * system power down. After rebooted checkFileExist always return false
-//         * although it exists. It causes whole database files to be deleted
-//         ***/
-//        for (FileInfo fileInfo: listFileInfo) {
-//            if (!FileManager.checkFileExist(fileInfo)) {
-//                rctFileMgr.removeFileInfo(fileInfo);
-//                Log.d(MainActivity.class.getSimpleName(),
-//                        "Not found File name : " + fileInfo.getFileName());
-//            }
-//        }
+        for (FileInfo fileInfo: listFileInfo) {
+            if (!FileManager.checkFileExist(fileInfo)) {
+                rctFileMgr.removeFileInfo(fileInfo);
+                Log.d(MainActivity.class.getSimpleName(),
+                        "Not found File name : " + fileInfo.getFileName());
+            }
+        }
     }
 
     /* Is currently workspace file different from original one? */
