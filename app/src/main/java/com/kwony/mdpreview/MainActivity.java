@@ -127,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
         initializeDatabase();
 
-        prepareWorkspace();
-
         dialogIntentFilter = new IntentFilter();
         dialogIntentFilter.addAction(BR_OPEN);
         dialogIntentFilter.addAction(BR_SAVE_OPEN);
@@ -214,6 +212,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            /* XXX:
+             * onRequestPermissionResult is called whenever application is launched
+             * although user already gave permission. It's because Android checks permission again.
+             * Storage accesses before arriving here are denied by Android policy.
+             *
+             * To access storage file on application start, add code here.
+             */
             prepareWorkspace();
 
             break;
