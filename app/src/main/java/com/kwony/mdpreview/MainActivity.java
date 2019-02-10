@@ -190,9 +190,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 /* TODO: Ask already working file needs save */
 
-                SharedPreferenceManager shrPrefMgr = SharedPreferenceManager.getInstance();
-                shrPrefMgr.setCurrentFileId(-1);
-                prepareWorkspace();
+                prepareWorkspace(true);
             }
         });
     }
@@ -219,7 +217,8 @@ public class MainActivity extends AppCompatActivity {
              *
              * To access storage file on application start, add code here.
              */
-            prepareWorkspace();
+
+            prepareWorkspace(!FileManager.checkFileExist(getMirrorFileInfo()));
 
             break;
         }
@@ -285,12 +284,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void prepareWorkspace() {
+    private void prepareWorkspace(boolean addNew) {
+        if (addNew) {
+            SharedPreferenceManager shrPrefMgr = SharedPreferenceManager.getInstance();
+            shrPrefMgr.setCurrentFileId(-1);
+            new CreateMirrorFileTask().execute();
+
+            return;
+        }
+
         FileInfo rctFile = getRecentFileInfo();
 
         if (rctFile == null || !FileManager.checkFileExist(rctFile)) {
             tvTitle.setText("NoTitle");
-            createWorkspaceFile();
         }
         else {
             tvTitle.setText(rctFile.getFileName());
@@ -308,21 +314,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferenceManager sharedPrefMgr = SharedPreferenceManager.getInstance();
         sharedPrefMgr.setCurrentFileId(newMirrorId);
 
-        prepareWorkspace();
-    }
-
-    private void createWorkspaceFile() {
-        boolean folderCreated;
-
-        folderCreated = FileManager.createFolder(
-                Environment.getExternalStorageDirectory() + File.separator,
-                getString(R.string.app_name));
-
-        if (folderCreated) {
-            FileManager.createFile(
-                    Environment.getExternalStorageDirectory() + File.separator + "/" + getString(R.string.app_name) + "/"
-                    , getString(R.string.mirror_file_md), getString(R.string.initial_mirror_value));
-        }
+        prepareWorkspace(false);
     }
 
     private FileInfo getMirrorFileInfo() {
@@ -359,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!updated) {
-            createWorkspaceFile();
+            new CreateMirrorFileTask().execute();
         }
     }
 
@@ -464,6 +456,51 @@ public class MainActivity extends AppCompatActivity {
                 fileCopyTask.execute(args);
             }
 
+        }
+    }
+
+    private class CreateMirrorFileTask extends AsyncTask<Void, Void, Void> {
+        private int WAIT_BUFFER = 300;
+        private AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        private AlertDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            builder.setCancelable(false); // if you want user to wait for some process to finish,
+            builder.setView(R.layout.dialog_file_copy_task);
+            dialog = builder.create();
+            dialog.show();
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            boolean folderCreated;
+
+            folderCreated = FileManager.createFolder(
+                    Environment.getExternalStorageDirectory() + File.separator,
+                    getString(R.string.app_name));
+
+            if (folderCreated) {
+                FileManager.createFile(
+                        Environment.getExternalStorageDirectory() + File.separator + "/" + getString(R.string.app_name) + "/"
+                        , getString(R.string.mirror_file_md), getString(R.string.initial_mirror_value));
+            }
+
+            try {
+                Thread.sleep(WAIT_BUFFER);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            prepareWorkspace(false);
+            dialog.dismiss();
+            super.onPostExecute(aVoid);
         }
     }
 
