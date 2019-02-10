@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.kwony.mdpreview.Database.Tables.RecentFileManager;
 import com.kwony.mdpreview.FileInfo;
 import com.kwony.mdpreview.MainActivity;
 import com.kwony.mdpreview.R;
@@ -43,6 +44,7 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
         CardView cardView;
         WebView wvPreview;
         ImageButton ibCheck;
+        ImageButton ibDelete;
 
         public ViewHolder(View view) {
             super(view);
@@ -51,6 +53,7 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
             cardView = (CardView) view.findViewById(R.id.cardView);
             wvPreview = (WebView) view.findViewById(R.id.wvPreview);
             ibCheck = (ImageButton) view.findViewById(R.id.ibCheck);
+            ibDelete = (ImageButton) view.findViewById(R.id.ibDelete);
         }
     }
 
@@ -82,6 +85,15 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
                 resultIntent.putExtra(MainActivity.RC_FILE_ID, fileInfo.getFileId());
                 mActivity.setResult(Activity.RESULT_OK, resultIntent);
                 mActivity.finish();
+            }
+        });
+
+        holder.ibDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectActivity.BR_DELETE);
+                intent.putExtra(SelectActivity.KEY_DELETE_FILE_ID, fileInfo.getFileId());
+                mActivity.sendBroadcast(intent);
             }
         });
 

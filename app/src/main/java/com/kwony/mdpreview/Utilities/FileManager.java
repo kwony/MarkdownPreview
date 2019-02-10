@@ -53,6 +53,13 @@ public class FileManager {
         }
     }
 
+    public static final boolean deleteFile(FileInfo fileInfo) {
+        File file = new File(fileInfo.getFilePath()
+                + File.separator + fileInfo.getFileName());
+
+        return file.delete();
+    }
+
     public static final boolean checkFileExist(FileInfo fileInfo) {
         File file = new File(fileInfo.getFilePath()
                 + File.separator + fileInfo.getFileName());

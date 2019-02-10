@@ -56,6 +56,7 @@
                     android:layout_height="wrap_content"/>
 
                 <ImageButton
+                    android:id="@+id/ibDelete"
                     android:paddingHorizontal="2dp"
                     android:background="@android:drawable/screen_background_light_transparent"
                     android:src="@drawable/ic_delete_gray_24dp"
