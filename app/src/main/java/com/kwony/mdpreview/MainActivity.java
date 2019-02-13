@@ -181,8 +181,8 @@ public class MainActivity extends AppCompatActivity {
                     FileInfo srcFileInfo = getRecentFileInfo();
                     FileInfo[] args = { mirrorFile, srcFileInfo };
 
-                    FileCopyTask fileCopyTask = new FileCopyTask();
-                    fileCopyTask.execute(args);
+                    FileCopyOpenTask fileCopyOpenTask = new FileCopyOpenTask();
+                    fileCopyOpenTask.execute(args);
                 }
             }
         });
@@ -450,9 +450,9 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                FileInfo[] args = { mirrorFile, originFile, openFile };
-                FileCopyTask fileCopyTask = new FileCopyTask();
-                fileCopyTask.execute(args);
+                FileInfo[] args = { mirrorFile, originFile, openFile, mirrorFile };
+                FileCopyOpenTask fileCopyOpenTask = new FileCopyOpenTask();
+                fileCopyOpenTask.execute(args);
             }
 
         }
@@ -505,7 +505,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class FileCopyTask extends AsyncTask<FileInfo, Void, Boolean> {
+    private class FileCopyOpenTask extends AsyncTask<FileInfo, Void, Boolean> {
         private int WAIT_BUFFER = 700;
         private AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         private AlertDialog dialog;
@@ -527,24 +527,23 @@ public class MainActivity extends AppCompatActivity {
             Boolean status = false;
 
             /* Elements in array should be ordered in this way
-             * @ first element is mirror file.
-             * @ second element is original file
+             * @ first element is source file to copy
+             * @ second element is destination file to be copied
              * @ third element is the file to be opened at last.
-             *
-             * Third element can be null. But others must be valid.
+             * @ forth element is mirror file which is used for workspace
              */
-            FileInfo mirrorFile = fileInfos[0];
-            FileInfo originFile = fileInfos[1];
+            FileInfo srcFile = fileInfos.length < 1 ? null : fileInfos[0];
+            FileInfo dstFile = fileInfos.length < 2 ? null : fileInfos[1];
             FileInfo openFile = fileInfos.length < 3 ? null : fileInfos[2];
-
-            if (mirrorFile == null || originFile == null)
-                return false;
+            FileInfo mirrorFile = fileInfos.length < 4 ? null : fileInfos[3];
 
             try {
                 Thread.sleep(WAIT_BUFFER);
-                status = FileManager.copyFile(mirrorFile, originFile);
 
-                if (status && openFile != null) {
+                if (srcFile != null && dstFile != null)
+                    status = FileManager.copyFile(srcFile, dstFile);
+
+                if (openFile != null && mirrorFile != null) {
                     status = FileManager.copyFile(openFile, mirrorFile);
                 }
             } catch (IOException e) {
