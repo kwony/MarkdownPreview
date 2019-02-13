@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -466,7 +468,9 @@ public class MainActivity extends AppCompatActivity {
             builder.setCancelable(false); // if you want user to wait for some process to finish,
             builder.setView(R.layout.dialog_file_copy_task);
             dialog = builder.create();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
+
             super.onPreExecute();
         }
 
@@ -512,14 +516,8 @@ public class MainActivity extends AppCompatActivity {
             builder.setCancelable(false); // if you want user to wait for some process to finish,
             builder.setView(R.layout.dialog_file_copy_task);
             dialog = builder.create();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
-
-//            TODO: Resizing dialog width.
-//            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-//            lp.width = 500;
-//            lp.height = 500;
-//            lp.copyFrom(dialog.getWindow().getAttributes());
-//            dialog.getWindow().setAttributes(lp);
 
             super.onPreExecute();
         }
