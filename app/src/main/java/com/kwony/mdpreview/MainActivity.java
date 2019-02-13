@@ -256,7 +256,12 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                prepareWorkspace(openFileId);
+                RecentFileManager rctFileMgr = new RecentFileManager();
+                FileInfo mirrorFile = getMirrorFileInfo();
+                FileInfo openFile = rctFileMgr.getFileInfo(openFileId);
+
+                FileInfo[] args = { null, null, openFile, mirrorFile };
+                new FileCopyOpenTask().execute(args);
             }
         }
     }
@@ -303,7 +308,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             tvTitle.setText(rctFile.getFileName());
-            updateWorkspaceFile(rctFile);
         }
 
         for (int i = 0; i < adapter.getCount(); i++) {
@@ -340,22 +344,6 @@ public class MainActivity extends AppCompatActivity {
         FileInfo rctFileInfo = rctFileMgr.getFileInfo(rctFileId);
 
         return rctFileInfo;
-    }
-
-    private void updateWorkspaceFile(FileInfo fileInfo) {
-        boolean updated = false;
-
-        FileInfo mirrorFile = getMirrorFileInfo();
-
-        try {
-            updated = FileManager.copyFile(fileInfo, mirrorFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (!updated) {
-            new CreateMirrorFileTask().execute();
-        }
     }
 
     private void initializeDatabase() {
@@ -422,7 +410,11 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                prepareWorkspace(openFileId);
+                RecentFileManager rctFileMgr = new RecentFileManager();
+                FileInfo mirrorFile = getMirrorFileInfo();
+                FileInfo openFile = rctFileMgr.getFileInfo(openFileId);
+                FileInfo[] args = { null, null, openFile, mirrorFile };
+                new FileCopyOpenTask().execute(args);
             }
             else if (BR_SAVE_OPEN.equals(intent.getAction())) {
                 /*
