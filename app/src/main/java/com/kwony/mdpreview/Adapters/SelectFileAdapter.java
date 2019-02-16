@@ -21,6 +21,7 @@ import com.kwony.mdpreview.MainActivity;
 import com.kwony.mdpreview.R;
 import com.kwony.mdpreview.SelectActivity;
 import com.kwony.mdpreview.Utilities.FileManager;
+import com.kwony.mdpreview.Utilities.ImgTouchListener;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -77,6 +78,7 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
             }
         });
 
+        holder.ibCheck.setOnTouchListener(new ImgTouchListener());
         holder.ibCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +90,7 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
             }
         });
 
+        holder.ibDelete.setOnTouchListener(new ImgTouchListener());
         holder.ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,7 +99,7 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
                 mActivity.sendBroadcast(intent);
             }
         });
-
+        
         StringBuffer fileValue = FileManager.readFileValue(
                 Environment.getExternalStorageDirectory()
                         + File.separator + mActivity.getString(R.string.app_name),

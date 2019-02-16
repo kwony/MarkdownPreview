@@ -36,6 +36,7 @@ import com.kwony.mdpreview.Tabs.MarkdownTabs.IMarkdownTab;
 import com.kwony.mdpreview.Tabs.Pager.MarkdownPagerAdapter;
 import com.kwony.mdpreview.Tabs.SlidingTabLib.SlidingTabLayout;
 import com.kwony.mdpreview.Utilities.FileManager;
+import com.kwony.mdpreview.Utilities.ImgTouchListener;
 
 import java.io.File;
 import java.io.IOException;
@@ -144,10 +145,10 @@ public class MainActivity extends AppCompatActivity {
         ibAdd = findViewById(R.id.ib_note_add);
 
         /* Every image buttons has same animation effect on touch */
-        ibShare.setOnTouchListener(ibTouchListener);
-        ibSave.setOnTouchListener(ibTouchListener);
-        ibOpen.setOnTouchListener(ibTouchListener);
-        ibAdd.setOnTouchListener(ibTouchListener);
+        ibShare.setOnTouchListener(new ImgTouchListener());
+        ibSave.setOnTouchListener(new ImgTouchListener());
+        ibOpen.setOnTouchListener(new ImgTouchListener());
+        ibAdd.setOnTouchListener(new ImgTouchListener());
 
         ibShare.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -378,25 +379,6 @@ public class MainActivity extends AppCompatActivity {
 
         return false;
     }
-
-    private View.OnTouchListener ibTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            switch(event.getAction()) {
-                case MotionEvent.ACTION_DOWN: {
-                    v.getBackground().setColorFilter(0x93939393, PorterDuff.Mode.SRC_ATOP);
-                    v.invalidate();
-                    break;
-                }
-                case MotionEvent.ACTION_UP: {
-                    v.getBackground().clearColorFilter();
-                    v.invalidate();
-                    break;
-                }
-            }
-            return false;
-        }
-    };
 
     private class WorkspaceReceiver extends BroadcastReceiver {
         @Override
