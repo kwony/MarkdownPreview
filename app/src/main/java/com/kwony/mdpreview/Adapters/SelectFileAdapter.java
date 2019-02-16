@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.kwony.mdpreview.Builders.AskDialog;
 import com.kwony.mdpreview.Database.Tables.RecentFileManager;
 import com.kwony.mdpreview.FileInfo;
 import com.kwony.mdpreview.MainActivity;
@@ -94,12 +95,11 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
         holder.ibDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SelectActivity.BR_DELETE);
-                intent.putExtra(SelectActivity.KEY_DELETE_FILE_ID, fileInfo.getFileId());
-                mActivity.sendBroadcast(intent);
+                AskDialog askDialog = new AskDialog(mActivity, mActivity.getString(R.string.ask_user_delete_file));
+                askDialog.askDeleteDialog(fileInfo.getFileId());
             }
         });
-        
+
         StringBuffer fileValue = FileManager.readFileValue(
                 Environment.getExternalStorageDirectory()
                         + File.separator + mActivity.getString(R.string.app_name),
