@@ -21,6 +21,7 @@ import android.graphics.Color;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -55,6 +56,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
     private static final int TITLE_OFFSET_DIPS = 24;
     private static final int TAB_VIEW_PADDING_DIPS = 16;
     private static final int TAB_VIEW_TEXT_SIZE_SP = 15;
+    private static final int TAB_IMAGE_VIEW_PADDING_PIV = 200;
 
     private int mTitleOffset;
 
@@ -192,7 +194,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
         imageView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
+        /* the value of padding should be smaller as display size bigger */
+        int padding = (int) (TAB_IMAGE_VIEW_PADDING_PIV / (getResources().getDisplayMetrics().density * 2));
         imageView.setPadding(padding, padding, padding, padding);
 
         return imageView;
