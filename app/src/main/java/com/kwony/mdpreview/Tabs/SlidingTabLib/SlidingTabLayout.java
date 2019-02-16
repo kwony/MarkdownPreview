@@ -254,9 +254,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
             ImageView tabImageView = (ImageView) tabView;
 
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tabView.getLayoutParams();
-            lp.width = 0;
-            lp.weight = 1;
+            lp.width = 150;
             lp.height = 150;
+            lp.weight = 3;
 
             tabImageView.setImageResource(i == 0 ?
                     adapter.getPageSelectedImgSrc(i) : adapter.getPageUnSelectedImgSrc(i));
