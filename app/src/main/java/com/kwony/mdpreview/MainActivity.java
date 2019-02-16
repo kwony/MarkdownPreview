@@ -249,10 +249,9 @@ public class MainActivity extends AppCompatActivity {
                 if (sharedPrefMgr.getCurrentFileId() == -1 || isFileModified()) {
                     /* Ask user to save it or not */
                     AskDialog askDialog = new AskDialog(MainActivity.this,
-                            getResources().getString(R.string.ask_user_save_file),
-                            sharedPrefMgr.getCurrentFileId(), openFileId);
+                            getResources().getString(R.string.ask_user_save_file));
 
-                    askDialog.askSaveDialog();
+                    askDialog.askSaveDialog(sharedPrefMgr.getCurrentFileId(), openFileId);
                     return;
                 }
 

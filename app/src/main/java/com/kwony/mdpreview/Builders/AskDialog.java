@@ -18,22 +18,13 @@ public class AskDialog {
 
     private Activity mActivity;
     private String mTitle;
-    private long mSaveFileId = -1;
-    private long mOpenFileId = -1;
 
     public AskDialog(Activity activity, String title) {
         mActivity = activity;
         mTitle = title;
     }
 
-    public AskDialog(Activity activity, String title, long saveFileId, long openFileId) {
-        mActivity = activity;
-        mTitle = title;
-        mSaveFileId = saveFileId;
-        mOpenFileId = openFileId;
-    }
-
-    public void askSaveDialog() {
+    public void askSaveDialog(final long saveFileId, final long openFileId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 
         builder.setTitle(mTitle)
@@ -42,8 +33,8 @@ public class AskDialog {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(MainActivity.BR_SAVE_OPEN);
-                        intent.putExtra(MainActivity.KEY_SAVE_FILE_ID, mSaveFileId);
-                        intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, mOpenFileId);
+                        intent.putExtra(MainActivity.KEY_SAVE_FILE_ID, saveFileId);
+                        intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, openFileId);
 
                         mActivity.sendBroadcast(intent);
                     }
@@ -52,7 +43,7 @@ public class AskDialog {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(MainActivity.BR_OPEN);
-                        intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, mOpenFileId);
+                        intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, openFileId);
 
                         mActivity.sendBroadcast(intent);
                     }
@@ -61,7 +52,7 @@ public class AskDialog {
         builder.show();
     }
 
-    public void askOverwriteDialog() {
+    public void askOverwriteDialog(final long saveFileId, final long openFileId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 
         builder.setTitle(mTitle)
@@ -70,8 +61,8 @@ public class AskDialog {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(MainActivity.BR_SAVE_OPEN);
-                                intent.putExtra(MainActivity.KEY_SAVE_FILE_ID, mSaveFileId);
-                                intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, mOpenFileId);
+                                intent.putExtra(MainActivity.KEY_SAVE_FILE_ID, saveFileId);
+                                intent.putExtra(MainActivity.KEY_OPEN_FILE_ID, openFileId);
 
                                 mActivity.sendBroadcast(intent);
                             }

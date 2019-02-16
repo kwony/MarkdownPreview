@@ -57,10 +57,9 @@ public class SaveFileDialog {
                 for (FileInfo fileInfo: listFileInfo) {
                     if (fileInfo.getFileName().equals(fileName)) {
                         AskDialog askDialog = new AskDialog(mActivity,
-                                mActivity.getString(R.string.ask_user_overwrite_file),
-                                fileInfo.getFileId(), fileInfo.getFileId());
+                                mActivity.getString(R.string.ask_user_overwrite_file));
 
-                        askDialog.askOverwriteDialog();
+                        askDialog.askOverwriteDialog(fileInfo.getFileId(), fileInfo.getFileId());
                         return;
                     }
                 }
