@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_markdown"
         android:enabled="true"
-        android:icon="@drawable/ic_code_black_24dp"
+        android:icon="@drawable/ic_code_black_edit_24dp"
         android:title="Markdown"/>
 
     <item

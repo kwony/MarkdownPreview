@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -64,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton ibSave;
     private ImageButton ibAdd;
     CharSequence Titles[] = { "Preview", "Code" };
-    private int selectedImgSrc[] = { R.drawable.ic_code_black_24dp, R.drawable.ic_mode_edit_black_24dp };
-    private int unselectedImgSrc [] = { R.drawable.ic_code_gray_24dp, R.drawable.ic_mode_edit_gray_24dp };
+    private int selectedImgSrc[] = { R.drawable.ic_code_black_preview, R.drawable.ic_code_black_edit_24dp };
+    private int unselectedImgSrc [] = { R.drawable.ic_code_gray_preview, R.drawable.ic_code_gray_edit_24dp };
 
     private final static int ASK_OPEN_PERMISSION = 0;
 
