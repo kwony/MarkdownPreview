@@ -13,8 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import android.print.PdfPrint;
+
+import com.kwony.mdpreview.MainActivity;
 import com.kwony.mdpreview.R;
 import com.kwony.mdpreview.Utilities.FileManager;
+import com.webviewtopdf.PdfView;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -46,6 +50,7 @@ public class PreviewTab extends Fragment implements IMarkdownTab {
 
     public void cbPageUnSelected() {
         convertPreviewToPng();
+        convertPreviewToPdf();
 
     }
 
@@ -108,5 +113,24 @@ public class PreviewTab extends Fragment implements IMarkdownTab {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void convertPreviewToPdf() {
+        String path = Environment.getExternalStorageDirectory()
+                + File.separator + getString(R.string.app_name) + File.separator;
+        File file = new File(path);
+        String fileName = "test.pdf";
+
+        PdfView.createWebPrintJob(getActivity(), wvPreview, file, fileName, new PdfView.Callback(){
+            @Override
+            public void success(String path) {
+                Log.d(PreviewTab.class.getSimpleName(), "create web print job succeeded");
+            }
+            @Override
+            public void failure() {
+                Log.d(PreviewTab.class.getSimpleName(), "create web print job failed");
+
+            }
+        });
     }
 }
