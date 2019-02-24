@@ -3,6 +3,7 @@
 
     <string name="ask_user_delete_file">Are you sure to delete file?</string>
     <string name="ask_user_save_file">Do you want to save current file?</string>
+    <string name="ask_user_share_type">Which type do you want to share?</string>
     <string name="ask_user_overwrite_file">There is a file which has same name. Do you want to overwrite it?</string>
 
     <string name="builder_cancel">CANCEL</string>

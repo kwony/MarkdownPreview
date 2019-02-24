@@ -8,7 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -21,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,13 +37,22 @@ import com.kwony.mdpreview.Database.DatabaseManager;
 import com.kwony.mdpreview.Database.SharedPreferenceManager;
 import com.kwony.mdpreview.Database.Tables.RecentFileManager;
 import com.kwony.mdpreview.Tabs.MarkdownTabs.IMarkdownTab;
+import com.kwony.mdpreview.Tabs.MarkdownTabs.PreviewTab;
 import com.kwony.mdpreview.Tabs.Pager.MarkdownPagerAdapter;
 import com.kwony.mdpreview.Tabs.SlidingTabLib.SlidingTabLayout;
 import com.kwony.mdpreview.Utilities.FileManager;
 import com.kwony.mdpreview.Utilities.ImgTouchListener;
+import com.webviewtopdf.PdfView;
+
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
+import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private IntentFilter dialogIntentFilter;
 
     private TextView tvTitle;
+    private WebView wvShare;
 
     private ImageButton ibShare;
     private ImageButton ibOpen;
@@ -77,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tvTitle = findViewById(R.id.tvTitle);
+        wvShare = findViewById(R.id.wvShare);
         paletteSetup();
 
         ActivityCompat.requestPermissions(MainActivity.this,
@@ -153,6 +168,39 @@ public class MainActivity extends AppCompatActivity {
         ibShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                StringBuffer fileValue = FileManager.readFileValue(
+                        Environment.getExternalStorageDirectory()
+                                + File.separator + getString(R.string.app_name),
+                        getString(R.string.mirror_file_md));
+
+                if (fileValue == null) {
+                    Toast.makeText(MainActivity.this, "There is not any string inside file",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Parser parser = Parser.builder().build();
+                Node document = parser.parse(fileValue.toString());
+                HtmlRenderer renderer = HtmlRenderer.builder().build();
+
+                wvShare.loadData(renderer.render(document),
+                        "text/html; charset=utf-8", "UTF-8");
+
+                CharSequence[] shareType = { "Image", "PDF" };
+                AskDialog askDialog = new AskDialog(MainActivity.this, getString(R.string.ask_user_share_type));
+                askDialog.askShareType(shareType, new CallbackShareType() {
+                    @Override
+                    public void typeSelected(int type) {
+                        switch (type) {
+                            case 0:
+                                convertPreviewToPng();
+                                break;
+                            case 1:
+                                convertPreviewToPdf();
+                                break;
+                        }
+                    }
+                });
             }
         });
 
@@ -281,6 +329,10 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    public interface CallbackShareType {
+        void typeSelected(int type);
+    }
+
     private void openFileContent() {
         Intent fileIntent = new Intent(Intent.ACTION_GET_CONTENT);
         fileIntent.setType("*/*");
@@ -377,6 +429,63 @@ public class MainActivity extends AppCompatActivity {
             return true;
 
         return false;
+    }
+
+    private void convertPreviewToPng() {
+        wvShare.measure(View.MeasureSpec.makeMeasureSpec(
+                View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        wvShare.layout(0, 0, wvShare.getMeasuredWidth(), wvShare.getMeasuredHeight());
+        wvShare.setDrawingCacheEnabled(true);
+        wvShare.buildDrawingCache();
+
+        Bitmap bm = Bitmap.createBitmap(wvShare.getWidth(), wvShare.getHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bm);
+        Paint paint = new Paint();
+        int iHeight = bm.getHeight();
+
+        canvas.drawBitmap(bm, 0, iHeight, paint);
+        wvShare.draw(canvas);
+
+        if (bm == null) {
+            Toast.makeText(MainActivity.this, "Failed to convert image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            String path = Environment.getExternalStorageDirectory()
+                    + File.separator + getString(R.string.app_name) + File.separator;
+            OutputStream fOut = null;
+            File file = new File(path, "test.png");
+            fOut = new FileOutputStream(file);
+
+            bm.compress(Bitmap.CompressFormat.PNG, 50, fOut);
+            fOut.flush();
+            fOut.close();
+            bm.recycle();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void convertPreviewToPdf() {
+        String path = Environment.getExternalStorageDirectory()
+                + File.separator + getString(R.string.app_name) + File.separator;
+        File file = new File(path);
+        String fileName = "test.pdf";
+
+        PdfView.createWebPrintJob(this, wvShare, file, fileName, new PdfView.Callback(){
+            @Override
+            public void success(String path) {
+            }
+            @Override
+            public void failure() {
+                Toast.makeText(MainActivity.this, "Failed to convert pdf", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private class WorkspaceReceiver extends BroadcastReceiver {
