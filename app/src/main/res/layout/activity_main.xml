@@ -155,4 +155,11 @@
             android:layout_gravity="center"
             android:text="You can't use app without permission." />
     </LinearLayout>
+
+    <WebView
+        android:id="@+id/wvShare"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
+
 </android.support.constraint.ConstraintLayout>

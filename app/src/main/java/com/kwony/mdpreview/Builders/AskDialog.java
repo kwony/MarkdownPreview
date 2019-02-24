@@ -99,4 +99,27 @@ public class AskDialog {
 
         builder.show();
     }
+
+    public void askShareType(CharSequence[] shareType, final MainActivity.CallbackShareType callback) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+
+
+        builder.setTitle(mTitle)
+                .setSingleChoiceItems(shareType, 0, null)
+                .setPositiveButton(mActivity.getResources().getString(R.string.builder_yes),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                callback.typeSelected(((AlertDialog) dialog).getListView().getCheckedItemPosition());
+                            }
+                        })
+                .setNegativeButton(mActivity.getResources().getString(R.string.builder_no), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        builder.show();
+    }
 }
