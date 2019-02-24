@@ -14,10 +14,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -191,12 +193,18 @@ public class MainActivity extends AppCompatActivity {
                 askDialog.askShareType(shareType, new CallbackShareType() {
                     @Override
                     public void typeSelected(int type) {
+                        String path = Environment.getExternalStorageDirectory()
+                                + File.separator + getString(R.string.app_name) + File.separator;
                         switch (type) {
                             case 0:
-                                convertPreviewToPng();
+                                String pngFileName = "test.png";
+                                convertPreviewToPng(path, pngFileName);
+                                shareFile("image/png", path, pngFileName);
                                 break;
                             case 1:
-                                convertPreviewToPdf();
+                                String pdfFileName = "test.pdf";
+                                convertPreviewToPdf(path, pdfFileName);
+                                shareFile("application/pdf", path, pdfFileName);
                                 break;
                         }
                     }
@@ -431,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    private void convertPreviewToPng() {
+    private void convertPreviewToPng(String path, String fileName) {
         wvShare.measure(View.MeasureSpec.makeMeasureSpec(
                 View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
@@ -454,10 +462,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            String path = Environment.getExternalStorageDirectory()
-                    + File.separator + getString(R.string.app_name) + File.separator;
             OutputStream fOut = null;
-            File file = new File(path, "test.png");
+            File file = new File(path, fileName);
             fOut = new FileOutputStream(file);
 
             bm.compress(Bitmap.CompressFormat.PNG, 50, fOut);
@@ -471,11 +477,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void convertPreviewToPdf() {
-        String path = Environment.getExternalStorageDirectory()
-                + File.separator + getString(R.string.app_name) + File.separator;
+    private void convertPreviewToPdf(String path, String fileName) {
         File file = new File(path);
-        String fileName = "test.pdf";
 
         PdfView.createWebPrintJob(this, wvShare, file, fileName, new PdfView.Callback(){
             @Override
@@ -486,6 +489,16 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Failed to convert pdf", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void shareFile(String type, String path, String fileName) {
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType(type);
+
+        File file = new File(path + fileName);
+
+        share.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(this, "{package_name}.fileprovider", file));
+        startActivity(Intent.createChooser(share, "Choose application you want to share"));
     }
 
     private class WorkspaceReceiver extends BroadcastReceiver {
