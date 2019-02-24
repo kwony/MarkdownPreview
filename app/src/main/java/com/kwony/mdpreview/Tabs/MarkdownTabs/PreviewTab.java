@@ -1,8 +1,5 @@
 package com.kwony.mdpreview.Tabs.MarkdownTabs;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -13,22 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
-import android.print.PdfPrint;
-
-import com.kwony.mdpreview.MainActivity;
 import com.kwony.mdpreview.R;
 import com.kwony.mdpreview.Utilities.FileManager;
-import com.webviewtopdf.PdfView;
 
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 public class PreviewTab extends Fragment implements IMarkdownTab {
     private WebView wvPreview;
@@ -49,6 +38,7 @@ public class PreviewTab extends Fragment implements IMarkdownTab {
     }
 
     public void cbPageUnSelected() {
+
     }
 
     public void cbSetTabView() {
