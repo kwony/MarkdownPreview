@@ -14,6 +14,12 @@
     <string name="default_file_name">No Title</string>
     <string name="initial_mirror_value">## Hello World</string>
     <string name="invalid_file_name">Invalid File Name</string>
+
+    <string name="image_add_sub_text">NEW</string>
+    <string name="image_save_sub_test">SAVE</string>
+    <string name="image_open_sub_text">OPEN</string>
+    <string name="image_share_sub_text">SHARE</string>
+
     <string name="mirror_file_md">686d8501d75b271337e18677009c68fe.md</string>
     <string name="toast_unable_contiue_without_perm"> Unable to use app without Permission </string>
 </resources>
