@@ -42,6 +42,7 @@ import com.kwony.mdpreview.Tabs.MarkdownTabs.IMarkdownTab;
 import com.kwony.mdpreview.Tabs.MarkdownTabs.PreviewTab;
 import com.kwony.mdpreview.Tabs.Pager.MarkdownPagerAdapter;
 import com.kwony.mdpreview.Tabs.SlidingTabLib.SlidingTabLayout;
+import com.kwony.mdpreview.Utilities.DateConverter;
 import com.kwony.mdpreview.Utilities.FileManager;
 import com.kwony.mdpreview.Utilities.ImgTouchListener;
 import com.webviewtopdf.PdfView;
@@ -197,12 +198,12 @@ public class MainActivity extends AppCompatActivity {
                                 + File.separator + getString(R.string.app_name) + File.separator;
                         switch (type) {
                             case 0:
-                                String pngFileName = "test.png";
+                                String pngFileName = DateConverter.getCurrentDateTime() + ".png";
                                 convertPreviewToPng(path, pngFileName);
                                 shareFile("image/png", path, pngFileName);
                                 break;
                             case 1:
-                                String pdfFileName = "test.pdf";
+                                String pdfFileName = DateConverter.getCurrentDateTime() + ".pdf";
                                 convertPreviewToPdf(path, pdfFileName);
                                 shareFile("application/pdf", path, pdfFileName);
                                 break;
