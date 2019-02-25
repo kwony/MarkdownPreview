@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kwony.mdpreview.Database.SharedPreferenceManager;
@@ -37,9 +38,11 @@ public class SaveFileDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         LayoutInflater inflater = mActivity.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.dialog_save_file, null);
+        final TextView tvTitle = (TextView) dialogView.findViewById(R.id.tvTitle);
         final EditText etFileName = (EditText) dialogView.findViewById(R.id.etFileName);
         final List<FileInfo> listFileInfo = rctFileManager.getAllFileInfo();
 
+        tvTitle.setText(new String(mActivity.getString(R.string.ask_user_type_file_name)));
         etFileName.setText(new String(mActivity.getString(R.string.default_file_name)));
         builder.setView(dialogView);
 
