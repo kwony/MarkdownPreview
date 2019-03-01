@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 StringBuffer fileValue = FileManager.readFileValue(
                         Environment.getExternalStorageDirectory()
-                                + File.separator + getString(R.string.app_name),
+                                + File.separator + getString(R.string.storage_folder_name),
                         getString(R.string.mirror_file_md));
 
                 if (fileValue == null) {
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void typeSelected(int type) {
                         String path = Environment.getExternalStorageDirectory()
-                                + File.separator + getString(R.string.app_name) + File.separator;
+                                + File.separator + getString(R.string.storage_folder_name) + File.separator;
                         switch (type) {
                             case 0:
                                 String pngFileName = DateConverter.getCurrentDateTime() + ".png";
@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FileInfo getMirrorFileInfo() {
         String mirrorFilePath =
-                Environment.getExternalStorageDirectory() + "/" + getString(R.string.app_name) + "/";
+                Environment.getExternalStorageDirectory() + "/" + getString(R.string.storage_folder_name) + "/";
         String mirrorFileName = getString(R.string.mirror_file_md);
 
         return new FileInfo(-1, mirrorFileName, mirrorFilePath,null);
@@ -575,11 +575,11 @@ public class MainActivity extends AppCompatActivity {
 
             folderCreated = FileManager.createFolder(
                     Environment.getExternalStorageDirectory() + File.separator,
-                    getString(R.string.app_name));
+                    getString(R.string.storage_folder_name));
 
             if (folderCreated) {
                 FileManager.createFile(
-                        Environment.getExternalStorageDirectory() + File.separator + "/" + getString(R.string.app_name) + "/"
+                        Environment.getExternalStorageDirectory() + File.separator + "/" + getString(R.string.storage_folder_name) + "/"
                         , getString(R.string.mirror_file_md), getString(R.string.initial_mirror_value));
             }
 

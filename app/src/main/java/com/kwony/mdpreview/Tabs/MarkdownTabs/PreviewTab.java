@@ -48,7 +48,7 @@ public class PreviewTab extends Fragment implements IMarkdownTab {
     private void showParsedMarkdown() {
         StringBuffer fileValue = FileManager.readFileValue(
                 Environment.getExternalStorageDirectory()
-                        + File.separator + getString(R.string.app_name),
+                        + File.separator + getString(R.string.storage_folder_name),
                 getString(R.string.mirror_file_md));;
 
         if (fileValue != null) {

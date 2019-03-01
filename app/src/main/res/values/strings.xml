@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">mdpreview</string>
+    <string name="storage_folder_name">mdpreview</string>
 
     <string name="ask_user_delete_file">Are you sure to delete file?</string>
     <string name="ask_user_save_file">Do you want to save current file?</string>

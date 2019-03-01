@@ -31,7 +31,7 @@ public class CodeTab extends Fragment implements IMarkdownTab {
 
         etCode.setText(FileManager.readFileValue(
                 Environment.getExternalStorageDirectory()
-                        + File.separator + getString(R.string.app_name),
+                        + File.separator + getString(R.string.storage_folder_name),
                 getString(R.string.mirror_file_md)), TextView.BufferType.EDITABLE);
 
         return v;
@@ -55,13 +55,13 @@ public class CodeTab extends Fragment implements IMarkdownTab {
     public void cbSetTabView() {
         etCode.setText(FileManager.readFileValue(
                 Environment.getExternalStorageDirectory()
-                        + File.separator + getString(R.string.app_name),
+                        + File.separator + getString(R.string.storage_folder_name),
                 getString(R.string.mirror_file_md)), TextView.BufferType.EDITABLE);
     }
 
     private void saveFile() {
         FileManager.writeFileValue(Environment.getExternalStorageDirectory()
-                        + File.separator + getString(R.string.app_name),
+                        + File.separator + getString(R.string.storage_folder_name),
                 getString(R.string.mirror_file_md),
                 etCode.getText().toString());
     }

@@ -102,7 +102,7 @@ public class SelectFileAdapter extends RecyclerView.Adapter<SelectFileAdapter.Vi
 
         StringBuffer fileValue = FileManager.readFileValue(
                 Environment.getExternalStorageDirectory()
-                        + File.separator + mActivity.getString(R.string.app_name),
+                        + File.separator + mActivity.getString(R.string.storage_folder_name),
                 fileInfo.getFileName());
 
         Log.d(SelectFileAdapter.class.getSimpleName(), "fileValue: " + fileValue);
