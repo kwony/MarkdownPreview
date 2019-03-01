@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">mdpreview</string>
+    <string name="app_name">MD Writer</string>
     <string name="storage_folder_name">mdpreview</string>
 
     <string name="ask_user_delete_file">Are you sure to delete file?</string>
